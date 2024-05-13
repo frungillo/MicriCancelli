@@ -155,7 +155,8 @@ namespace MicriCancelli
 
         private void button2_Click(object sender, EventArgs e)
         {
-            Codici.isCodiceValido(654321);
+            
+            MessageBox.Show(" Valido?" + Codici.isCodiceValido(654321).ToString());
         }
     }
 }

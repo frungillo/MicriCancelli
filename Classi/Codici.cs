@@ -28,7 +28,15 @@ namespace MicriCancelli.Classi
             SQLiteManager manager = new SQLiteManager(dbFilePath);
             Codici codice = new Codici();
             codice=manager.ReadCodice(id_codice);
-            return true;
+
+            DateTime data_emissione=DateTime.Parse(codice.Data_emissione+" "+codice.Ora_emissione);
+            if (codice.data_uso == "") // mai usato, scaduto?
+            {
+                if (data_emissione.AddMinutes(30) >= DateTime.Now) return true;  
+                else return false;
+            }
+            //usato già
+            return false;
         }
     }
 }
