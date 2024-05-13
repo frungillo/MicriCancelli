@@ -59,6 +59,8 @@ namespace MicriCancelli
                 if (key == Keys.Return)
                 {
                     // Aggiungi un ritorno a capo alla TextBox
+                    // aggiungo 2 linee
+                    textBox1.AppendText(Environment.NewLine);
                     textBox1.AppendText(Environment.NewLine);
                 }
                 else
@@ -68,11 +70,6 @@ namespace MicriCancelli
                     textBox1.AppendText(keyChar.ToString());
                 }
 
-
-
-                // char keyChar = (char)vkCode;
-
-                // Aggiungi il carattere alla TextBox
                // textBox1.AppendText(DateTime.Now+"- Letto Codice: "+keyChar.ToString()+ "\r\n");
             }
             return CallNextHookEx(hookID, nCode, wParam, lParam);
