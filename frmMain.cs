@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using MicriCancelli.Classi;
+using System.Data.SQLite;
 
 namespace MicriCancelli
 {
@@ -30,17 +32,23 @@ namespace MicriCancelli
         private const int CODE_LEN = 6;
         private const Keys keyEnd = Keys.E;
 
+        // Inizializza un nuovo gestore SQLiteManager
+        // string dbFilePath = @"D:\Sviluppo\MicriCancelli\DataBase\cancelli.db"; // Imposta il percorso del file del database SQLite
+        string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
+        //D:/Sviluppo/MicriCancelli/DataBase/cancelli.
 
         public frmMain()
         {
             InitializeComponent();
             keyboardProc = HookCallback;
             textBox1.ScrollBars=ScrollBars.Vertical;
+            
         }
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             hookID = SetHook(keyboardProc);
+            
         }
 
         protected override void OnFormClosing(FormClosingEventArgs e)
@@ -135,6 +143,19 @@ namespace MicriCancelli
         private void btnClear_Click(object sender, EventArgs e)
         {
             textBox1.Text = "";
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SQLiteManager manager = new SQLiteManager(dbFilePath);
+            // Inserisci un nuovo codice con data e ora di uso specificate
+            manager.InsertCodice(654321, "2024/05/12", "09:00", "", "");
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            Codici.isCodiceValido(654321);
         }
     }
 }
