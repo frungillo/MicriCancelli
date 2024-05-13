@@ -63,6 +63,16 @@ namespace MicriCancelli.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap clear_27 {
+            get {
+                object obj = ResourceManager.GetObject("clear-27", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap closeBar {
             get {
                 object obj = ResourceManager.GetObject("closeBar", resourceCulture);

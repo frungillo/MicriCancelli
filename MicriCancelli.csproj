@@ -113,6 +113,8 @@
       <DependentUpon>biglietto.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Classi\Commons.cs" />
+    <Compile Include="Classi\RegexUtilities.cs" />
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,6 +165,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\closeBar1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\clear-27.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

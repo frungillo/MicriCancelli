@@ -18,13 +18,24 @@ namespace MicriCancelli
     {
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
+
+
         private IntPtr hookID = IntPtr.Zero;
         private LowLevelKeyboardProc keyboardProc;
+
+        private StringBuilder inputBuffer = new StringBuilder();
+
+        // alcuni parametri
+
+        private const int CODE_LEN = 6;
+        private const Keys keyEnd = Keys.E;
+
 
         public frmMain()
         {
             InitializeComponent();
             keyboardProc = HookCallback;
+            textBox1.ScrollBars=ScrollBars.Vertical;
         }
         protected override void OnLoad(EventArgs e)
         {
@@ -55,22 +66,28 @@ namespace MicriCancelli
 
                 // Converti il codice del tasto in un valore Keys
                 Keys key = (Keys)vkCode;
-                // Controlla se il tasto premuto è il tasto "Invio"
-                if (key == Keys.Return)
+
+                // Controlla se il tasto premuto è il tasto "Invio", esco
+                if (key == Keys.Return) return CallNextHookEx(hookID, nCode, wParam, lParam);
+               
+                // Controlla se il tasto premuto è il tasto "E" ho finito la lettura
+                // il barcode con codifica COD39 è fatto da * SEI cifre + "E" + *
+                // ad esempio *123456E*  viene letto come codice 123456
+
+                if (key == keyEnd)
                 {
-                    // Aggiungi un ritorno a capo alla TextBox
-                    // aggiungo 2 linee
-                    textBox1.AppendText(Environment.NewLine);
-                    textBox1.AppendText(Environment.NewLine);
+                    // Aggiungi la stringa bufferizzata alla TextBox
+                    textBox1.AppendText(DateTime.Now + " - Letto Codice: " + inputBuffer.ToString().Substring(0,CODE_LEN) + Environment.NewLine);
+
+                    // Pulisci il buffer
+                    inputBuffer.Clear();
                 }
                 else
                 {
-                    // Altrimenti, aggiungi il carattere alla TextBox
+                    // Altrimenti, aggiungi il carattere al buffer
                     char keyChar = (char)vkCode;
-                    textBox1.AppendText(keyChar.ToString());
+                    inputBuffer.Append(keyChar);
                 }
-
-               // textBox1.AppendText(DateTime.Now+"- Letto Codice: "+keyChar.ToString()+ "\r\n");
             }
             return CallNextHookEx(hookID, nCode, wParam, lParam);
         }
@@ -115,5 +132,9 @@ namespace MicriCancelli
                 soc.Close();
         }
 
+        private void btnClear_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "";
+        }
     }
 }
