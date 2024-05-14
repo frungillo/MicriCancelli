@@ -106,7 +106,7 @@ namespace MicriCancelli
                 // Controlla se il tasto premuto è il tasto "E" ho finito la lettura
                 // il barcode con codifica COD39 è fatto da * SEI cifre + "E" + *
                 // ad esempio *123456E*  viene letto come codice 123456   
-                //txtLogLettore.AppendText(" - inputbuffer: " +inputBuffer.ToString() + Environment.NewLine);
+                txtLogLettore.AppendText(" - inputbuffer: " +inputBuffer.ToString() + Environment.NewLine);
 
                 if (key == keyEnd && inputBuffer.ToString().Length != code_len + 1) 
                 {
@@ -115,7 +115,6 @@ namespace MicriCancelli
                 }
 
                 if (key == keyEnd && inputBuffer.ToString().Length == code_len + 1)
-
                 {
                      // Aggiungi la stringa bufferizzata alla TextBox
                     string buffer = inputBuffer.ToString();
@@ -130,9 +129,9 @@ namespace MicriCancelli
                         string codice = buffer.Substring(0, code_len);
                         if (Codici.isCodiceEsistente(Convert.ToInt32(codice)))
                         {
-                            if (Codici.isCodiceValido(Convert.ToInt32(codice),minutiValidita))
+                            if (Codici.isCodiceValido(Convert.ToInt32(codice), minutiValidita))
                             {
-                                
+
                                 // AGGIORNO LA TABELLA CODICI
                                 Codici cod = new Codici();
                                 string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
@@ -160,7 +159,12 @@ namespace MicriCancelli
                             }
                         }
                         // è arrivato qualcosa che assomiglia ad un codice ma non esiste in tabella
-                        
+                        else 
+                        {
+                            txtLogLettore.AppendText(DateTime.Now + " - Codice non in tabella129988E129988E129988E129988E: " + codice + Environment.NewLine);
+                            inputBuffer.Clear();
+
+                        }
                     }
                     catch { inputBuffer.Clear(); }
 
