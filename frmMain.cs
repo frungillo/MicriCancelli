@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using MicriCancelli.Classi;
 using System.Data.SQLite;
+using static log4net.Appender.RollingFileAppender;
 
 namespace MicriCancelli
 {
@@ -41,7 +42,7 @@ namespace MicriCancelli
         {
             InitializeComponent();
             keyboardProc = HookCallback;
-            textBox1.ScrollBars=ScrollBars.Vertical;
+            txtLogLettore.ScrollBars=ScrollBars.Vertical;
             
         }
         protected override void OnLoad(EventArgs e)
@@ -85,8 +86,36 @@ namespace MicriCancelli
                 if (key == keyEnd)
                 {
                     // Aggiungi la stringa bufferizzata alla TextBox
-                    textBox1.AppendText(DateTime.Now + " - Letto Codice: " + inputBuffer.ToString().Substring(0,CODE_LEN) + Environment.NewLine);
+                    string codice = inputBuffer.ToString().Substring(0, CODE_LEN);
+                    txtLogLettore.AppendText(DateTime.Now + " - Letto Codice: " + codice + Environment.NewLine);
 
+                    // a questo punto ho un POTENZIALE codice a barre
+                    // verifico se esiste in tabella Codici
+
+                    if (Codici.isCodiceEsistente(Convert.ToInt32(codice)))
+                    {
+                        if (Codici.isCodiceValido(Convert.ToInt32(codice)))
+                        {
+                            // ALZO LA BARRIERA
+                            // AGGIORNO LA TABELLA CODICI
+                            Codici cod = new Codici();
+                            string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
+                            SQLiteManager manager = new SQLiteManager(dbFilePath);
+                            cod = manager.ReadCodice(Convert.ToInt32(codice));
+                            cod.Data_uso = DateTime.Now.ToString("dd/MM/yyyy");
+                            cod.Ora_uso = DateTime.Now.ToString("HH:mm");
+                            manager.UpdateCodice(cod.Id_codice, cod.Codice, cod.Data_emissione, cod.Ora_emissione, cod.Data_uso, cod.Ora_uso);
+                            txtLogLettore.AppendText(DateTime.Now + " - Aperta barriera per: " + codice + Environment.NewLine);
+                        }
+                        else // codice esistente ma non utilizzabile
+                        {
+                            txtLogLettore.AppendText(DateTime.Now + " - Passaggio negato per: " + codice + Environment.NewLine);
+                        }
+                    }
+                    else // è arrivato qualcosa che assomiglia ad un codice ma non esiste in tabella
+                    {
+                        txtLogLettore.Text = "";
+                    }
                     // Pulisci il buffer
                     inputBuffer.Clear();
                 }
@@ -120,6 +149,7 @@ namespace MicriCancelli
 
         private void btnApri_Click(object sender, EventArgs e)
         {
+            // COMANDA L'APERTURA MANUALE 
                 Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse("10.99.5.101");
                 System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, 80);
@@ -131,7 +161,8 @@ namespace MicriCancelli
 
         private void btnChiudi_Click(object sender, EventArgs e)
         {
-                Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            // COMANDA LA CHIUSURA MANUALE 
+            Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse("10.99.5.101");
                 System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, 80);
                 soc.Connect(remoteEP);
@@ -142,21 +173,29 @@ namespace MicriCancelli
 
         private void btnClear_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "";
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            SQLiteManager manager = new SQLiteManager(dbFilePath);
-            // Inserisci un nuovo codice con data e ora di uso specificate
-            manager.InsertCodice(654321, "2024/05/12", "09:00", "", "");
-
+            txtLogLettore.Text = "";
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             
             MessageBox.Show(" Valido?" + Codici.isCodiceValido(654321).ToString());
+        }
+
+        private void btnGeneraTicket_Click(object sender, EventArgs e)
+        {
+            // genera e stampa un nuovo biglietto. Come string che poi memoorizzo come intero che non inizia con 0
+            string codice;
+            do codice = Commons.RandomDigits(6);
+            while ( Codici.isCodiceEsistente(Convert.ToInt32(codice)) || codice.Substring(0, 1) == "0");
+
+            // ho un nuovo codice, inserisco in tabella
+            SQLiteManager manager = new SQLiteManager(dbFilePath);
+            // Inserisci un nuovo codice con data e ora di uso specificate
+            string ora = DateTime.Now.ToString("HH:mm"); 
+            string data = DateTime.Now.ToString("dd/MM/yyyy");
+            
+            manager.InsertCodice(Convert.ToInt32(codice), data, ora, "", "");
         }
     }
 }

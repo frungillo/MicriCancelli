@@ -28,23 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.components = new System.ComponentModel.Container();
+            this.txtLogLettore = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnGeneraTicket = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnChiudi = new System.Windows.Forms.Button();
             this.btnApri = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // textBox1
+            // txtLogLettore
             // 
-            this.textBox1.Location = new System.Drawing.Point(26, 40);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(306, 373);
-            this.textBox1.TabIndex = 0;
+            this.txtLogLettore.Location = new System.Drawing.Point(26, 40);
+            this.txtLogLettore.Multiline = true;
+            this.txtLogLettore.Name = "txtLogLettore";
+            this.txtLogLettore.ReadOnly = true;
+            this.txtLogLettore.Size = new System.Drawing.Size(306, 373);
+            this.txtLogLettore.TabIndex = 0;
             // 
             // label1
             // 
@@ -55,6 +56,18 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Operazioni di lettura";
             // 
+            // btnGeneraTicket
+            // 
+            this.btnGeneraTicket.BackColor = System.Drawing.Color.White;
+            this.btnGeneraTicket.Image = global::MicriCancelli.Properties.Resources.barcode_100;
+            this.btnGeneraTicket.Location = new System.Drawing.Point(660, 40);
+            this.btnGeneraTicket.Name = "btnGeneraTicket";
+            this.btnGeneraTicket.Size = new System.Drawing.Size(101, 101);
+            this.btnGeneraTicket.TabIndex = 8;
+            this.toolTip1.SetToolTip(this.btnGeneraTicket, "Genera e Stampa Biglietto");
+            this.btnGeneraTicket.UseVisualStyleBackColor = false;
+            this.btnGeneraTicket.Click += new System.EventHandler(this.btnGeneraTicket_Click);
+            // 
             // btnClear
             // 
             this.btnClear.Image = global::MicriCancelli.Properties.Resources.clear_27;
@@ -62,6 +75,7 @@
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(30, 30);
             this.btnClear.TabIndex = 5;
+            this.toolTip1.SetToolTip(this.btnClear, "Pulisci Log Letture");
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
@@ -73,6 +87,7 @@
             this.btnChiudi.Name = "btnChiudi";
             this.btnChiudi.Size = new System.Drawing.Size(101, 101);
             this.btnChiudi.TabIndex = 3;
+            this.toolTip1.SetToolTip(this.btnChiudi, "Chiudi Barriera");
             this.btnChiudi.UseVisualStyleBackColor = false;
             this.btnChiudi.Click += new System.EventHandler(this.btnChiudi_Click);
             // 
@@ -84,45 +99,25 @@
             this.btnApri.Name = "btnApri";
             this.btnApri.Size = new System.Drawing.Size(101, 101);
             this.btnApri.TabIndex = 2;
+            this.toolTip1.SetToolTip(this.btnApri, "Apri Barriera");
             this.btnApri.UseVisualStyleBackColor = false;
             this.btnApri.Click += new System.EventHandler(this.btnApri_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(530, 72);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(129, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(530, 143);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 7;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnGeneraTicket);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnChiudi);
             this.Controls.Add(this.btnApri);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtLogLettore);
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.ShowIcon = false;
-            this.Text = "MICRI - Gestione varchi Parcheggio";
+            this.Text = "MICRI - Gestione Varchi Parcheggio";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -130,13 +125,13 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtLogLettore;
         private System.Windows.Forms.Button btnApri;
         private System.Windows.Forms.Button btnChiudi;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnClear;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button btnGeneraTicket;
     }
 }
 

@@ -22,6 +22,8 @@ namespace MicriCancelli.Classi
         public string Data_uso { get => data_uso; set => data_uso = value; }
         public string Ora_uso { get => ora_uso; set => ora_uso = value; }
 
+        public Codici() { }
+        
         public static bool isCodiceValido(int id_codice) 
         {
             string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
@@ -37,6 +39,15 @@ namespace MicriCancelli.Classi
             }
             //usato già
             return false;
+        }
+        public static bool isCodiceEsistente(int id_codice)
+        {
+            string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
+            SQLiteManager manager = new SQLiteManager(dbFilePath);
+            Codici codice = new Codici();
+            codice = manager.ReadCodice(id_codice);
+            return !(codice.codice==0);
+           
         }
     }
 }
