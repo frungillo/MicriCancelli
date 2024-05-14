@@ -25,10 +25,46 @@ namespace MicriCancelli.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("D:\\Sviluppo\\MicriCancelli\\DataBase\\cancelli.db")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".\\DB\\cancelli.db")]
         public string dbpathFile {
             get {
                 return ((string)(this["dbpathFile"]));
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10.99.5.101")]
+        public string ipScheda {
+            get {
+                return ((string)(this["ipScheda"]));
+            }
+            set {
+                this["ipScheda"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("80")]
+        public int portaScheda {
+            get {
+                return ((int)(this["portaScheda"]));
+            }
+            set {
+                this["portaScheda"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int inching {
+            get {
+                return ((int)(this["inching"]));
+            }
+            set {
+                this["inching"] = value;
             }
         }
     }

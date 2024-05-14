@@ -3,7 +3,16 @@
   <Profiles />
   <Settings>
     <Setting Name="dbpathFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">D:\Sviluppo\MicriCancelli\DataBase\cancelli.db</Value>
+      <Value Profile="(Default)">.\DB\cancelli.db</Value>
+    </Setting>
+    <Setting Name="ipScheda" Type="System.String" Scope="User">
+      <Value Profile="(Default)">10.99.5.101</Value>
+    </Setting>
+    <Setting Name="portaScheda" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">80</Value>
+    </Setting>
+    <Setting Name="inching" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
     </Setting>
   </Settings>
 </SettingsFile>

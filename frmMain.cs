@@ -14,6 +14,8 @@ using System.Diagnostics;
 using MicriCancelli.Classi;
 using System.Data.SQLite;
 using static log4net.Appender.RollingFileAppender;
+using System.Threading;
+using CrystalDecisions.CrystalReports.Engine;
 
 namespace MicriCancelli
 {
@@ -180,28 +182,14 @@ namespace MicriCancelli
         private delegate IntPtr LowLevelKeyboardProc(int nCode, IntPtr wParam, IntPtr lParam);
 
 
-        private void btnApri_Click(object sender, EventArgs e)
+        private async void btnApri_Click(object sender, EventArgs e)
         {
-            // COMANDA L'APERTURA MANUALE 
-                Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(ipArduino);
-                System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, portaArduino);
-                soc.Connect(remoteEP);
-                byte[] byData = System.Text.Encoding.ASCII.GetBytes("apri*");
-                soc.Send(byData);
-                soc.Close();
+            await Commons.ApreChiude();
         }
 
         private void btnChiudi_Click(object sender, EventArgs e)
         {
-            // COMANDA LA CHIUSURA MANUALE 
-            Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(ipArduino);
-                System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, portaArduino);
-                soc.Connect(remoteEP);
-                byte[] byData = System.Text.Encoding.ASCII.GetBytes("chiudi*");
-                soc.Send(byData);
-                soc.Close();
+           
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -225,6 +213,16 @@ namespace MicriCancelli
             string data = DateTime.Now.ToString("dd/MM/yyyy");
             
             manager.InsertCodice(Convert.ToInt32(codice), data, ora, "", "");
+
+            
+
+            ReportDocument rep = new ReportDocument();
+            rep.Load(Application.StartupPath + "\\biglietto.rpt");
+            rep.SetParameterValue(0, "*" + codice + "E*");
+            rep.SetParameterValue(1, codice);
+            rep.PrintToPrinter(1,false,1,1);
+
+
         }
 
         private void btnSettings_Click(object sender, EventArgs e)

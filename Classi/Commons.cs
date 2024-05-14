@@ -9,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Net.Sockets;
+using System.Net;
+using MicriCancelli.Properties;
 
 namespace MicriCancelli.Classi
 {
@@ -154,6 +157,42 @@ namespace MicriCancelli.Classi
         public static bool IsValidCF(string input)
         {
             return RegexUtilities.IsValidCF_2(input);
+        }
+
+        /// <summary>
+        /// Apre il cancello 
+        /// </summary>
+        public static void apri()
+        {
+            // COMANDA L'APERTURA MANUALE 
+            Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(Properties.Settings.Default.ipScheda);
+            System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, Properties.Settings.Default.portaScheda);
+            soc.Connect(remoteEP);
+            byte[] byData = System.Text.Encoding.ASCII.GetBytes("apri*");
+            soc.Send(byData);
+            soc.Close();
+        }
+
+        public static void chiudi() {
+            // COMANDA LA CHIUSURA MANUALE 
+            Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(Properties.Settings.Default.ipScheda);
+            System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, Properties.Settings.Default.portaScheda);
+            soc.Connect(remoteEP);
+            byte[] byData = System.Text.Encoding.ASCII.GetBytes("chiudi*");
+            soc.Send(byData);
+            soc.Close();
+        }
+
+
+        public static async Task ApreChiude() {
+            await Task.Run(async () =>
+            {
+                apri();
+                await Task.Delay(Properties.Settings.Default.inching);
+                chiudi();
+            });
         }
        
 
