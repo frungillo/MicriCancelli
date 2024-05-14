@@ -146,6 +146,7 @@ namespace MicriCancelli.Classi
                 command.Parameters.AddWithValue("@key", key);
                 command.Parameters.AddWithValue("@value", value);
                 command.Parameters.AddWithValue("@parametroId", parametroId);
+                connection.Open();
                 command.ExecuteNonQuery();
             }
         }

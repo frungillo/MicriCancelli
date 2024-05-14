@@ -50,5 +50,43 @@ namespace MicriCancelli
                 leggiParametri();
             }
         }
+
+        private void btnSaveKeyEnd_Click(object sender, EventArgs e)
+        {
+            // per adesso non gestito
+        }
+
+        private void btnSalvaParametro_Click(object sender, EventArgs e)
+        {
+            Button item = new Button();
+            item =sender as Button;
+          
+            Parametri par=new Parametri();
+            par = Parametri.GetParametro(item.Tag.ToString());
+            switch (item.Tag.ToString()) 
+            {
+                case "code_len":
+                    par.Value = txtCodeLen.Text;
+                    break;
+                case "minutiValidita":
+                    par.Value = txtMinutiValidita.Text;
+                    break;
+                case "portaArduino":
+                    par.Value = txtPortaArduino.Text;
+                    break;
+                case "ipArduino":
+                    par.Value = txtIPArduino.Text;
+                    break;
+                case "inching":
+                    par.Value = txtInching.Text;
+                    break;
+                    default:
+                    return;
+                    
+            }
+            
+            Parametri.UpdateParametro(par); 
+            leggiParametri();
+        }
     }
 }

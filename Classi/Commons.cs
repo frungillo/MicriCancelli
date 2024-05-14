@@ -113,7 +113,6 @@ namespace MicriCancelli.Classi
             DropDownName.DisplayMember = display;
 
         }
-        
         public static GraphicsPath RoundedRect(Rectangle bounds, int radius)
         {
             int diameter = radius * 2;
@@ -166,8 +165,11 @@ namespace MicriCancelli.Classi
         {
             // COMANDA L'APERTURA MANUALE 
             Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(Properties.Settings.Default.ipScheda);
-            System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, Properties.Settings.Default.portaScheda);
+            Parametri par=new Parametri();
+            par = Parametri.GetParametro("ipArduino");
+            System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(par.Value);
+            par = Parametri.GetParametro("portaArduino");
+            System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, Convert.ToInt32(par.Value));
             soc.Connect(remoteEP);
             byte[] byData = System.Text.Encoding.ASCII.GetBytes("apri*");
             soc.Send(byData);
@@ -177,8 +179,11 @@ namespace MicriCancelli.Classi
         public static void chiudi() {
             // COMANDA LA CHIUSURA MANUALE 
             Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(Properties.Settings.Default.ipScheda);
-            System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, Properties.Settings.Default.portaScheda);
+            Parametri par = new Parametri();
+            par = Parametri.GetParametro("ipArduino");
+            System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(par.Value);
+            par = Parametri.GetParametro("portaArduino");
+            System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, Convert.ToInt32(par.Value));
             soc.Connect(remoteEP);
             byte[] byData = System.Text.Encoding.ASCII.GetBytes("chiudi*");
             soc.Send(byData);
@@ -186,11 +191,11 @@ namespace MicriCancelli.Classi
         }
 
 
-        public static async Task ApreChiude() {
+        public static async Task ApreChiude(int inching) {
             await Task.Run(async () =>
             {
                 apri();
-                await Task.Delay(Properties.Settings.Default.inching);
+                await Task.Delay(inching);
                 chiudi();
             });
         }

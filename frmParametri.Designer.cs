@@ -45,7 +45,11 @@
             this.btnSalvaPortaArduino = new System.Windows.Forms.Button();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.grpParametri = new System.Windows.Forms.GroupBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtInching = new System.Windows.Forms.TextBox();
+            this.btnSalvaInching = new System.Windows.Forms.Button();
             this.btnSblocca = new System.Windows.Forms.Button();
+            this.label7 = new System.Windows.Forms.Label();
             this.grpParametri.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -152,7 +156,9 @@
             this.btnSaveKeyEnd.Name = "btnSaveKeyEnd";
             this.btnSaveKeyEnd.Size = new System.Drawing.Size(31, 31);
             this.btnSaveKeyEnd.TabIndex = 12;
+            this.btnSaveKeyEnd.Tag = "KeyEnd";
             this.btnSaveKeyEnd.UseVisualStyleBackColor = true;
+            this.btnSaveKeyEnd.Click += new System.EventHandler(this.btnSaveKeyEnd_Click);
             // 
             // btnSalvaMinutiValidita
             // 
@@ -175,6 +181,7 @@
             this.btnSalvaCodeLen.TabIndex = 14;
             this.btnSalvaCodeLen.Tag = "code_len";
             this.btnSalvaCodeLen.UseVisualStyleBackColor = true;
+            this.btnSalvaCodeLen.Click += new System.EventHandler(this.btnSalvaParametro_Click);
             // 
             // btnSalvaIPArduino
             // 
@@ -210,6 +217,9 @@
             // 
             // grpParametri
             // 
+            this.grpParametri.Controls.Add(this.label6);
+            this.grpParametri.Controls.Add(this.txtInching);
+            this.grpParametri.Controls.Add(this.btnSalvaInching);
             this.grpParametri.Controls.Add(this.txtCodeLen);
             this.grpParametri.Controls.Add(this.label1);
             this.grpParametri.Controls.Add(this.btnSalvaPortaArduino);
@@ -230,6 +240,37 @@
             this.grpParametri.Size = new System.Drawing.Size(742, 300);
             this.grpParametri.TabIndex = 18;
             this.grpParametri.TabStop = false;
+            this.grpParametri.Tag = "portArduino";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(316, 28);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(75, 13);
+            this.label6.TabIndex = 17;
+            this.label6.Text = "Valore Inching";
+            // 
+            // txtInching
+            // 
+            this.txtInching.Enabled = false;
+            this.txtInching.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtInching.Location = new System.Drawing.Point(448, 20);
+            this.txtInching.Name = "txtInching";
+            this.txtInching.Size = new System.Drawing.Size(100, 29);
+            this.txtInching.TabIndex = 18;
+            this.txtInching.Tag = "inching";
+            // 
+            // btnSalvaInching
+            // 
+            this.btnSalvaInching.Enabled = false;
+            this.btnSalvaInching.Image = global::MicriCancelli.Properties.Resources.save_30;
+            this.btnSalvaInching.Location = new System.Drawing.Point(555, 19);
+            this.btnSalvaInching.Name = "btnSalvaInching";
+            this.btnSalvaInching.Size = new System.Drawing.Size(31, 31);
+            this.btnSalvaInching.TabIndex = 19;
+            this.btnSalvaInching.Tag = "inching";
+            this.btnSalvaInching.UseVisualStyleBackColor = true;
             // 
             // btnSblocca
             // 
@@ -242,11 +283,22 @@
             this.btnSblocca.UseVisualStyleBackColor = false;
             this.btnSblocca.Click += new System.EventHandler(this.btnSblocca_Click);
             // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(348, 19);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(418, 16);
+            this.label7.TabIndex = 20;
+            this.label7.Text = "ATTENZIONE: i valori dei textBox non sono soggetti a controlli formali";
+            // 
             // frmParametri
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.btnSblocca);
             this.Controls.Add(this.grpParametri);
             this.Controls.Add(this.txtPassword);
@@ -282,5 +334,9 @@
         private System.Windows.Forms.TextBox txtPassword;
         private System.Windows.Forms.GroupBox grpParametri;
         private System.Windows.Forms.Button btnSblocca;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox txtInching;
+        private System.Windows.Forms.Button btnSalvaInching;
+        private System.Windows.Forms.Label label7;
     }
 }

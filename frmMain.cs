@@ -37,7 +37,7 @@ namespace MicriCancelli
         private int minutiValidita = 30;
         private string ipArduino = "10.99.5.101";
         private int portaArduino = 80;
-
+        private int inching = 1000;
 
         // Inizializza un nuovo gestore SQLiteManager
        
@@ -48,10 +48,25 @@ namespace MicriCancelli
             InitializeComponent();
             keyboardProc = HookCallback;
             txtLogLettore.ScrollBars=ScrollBars.Vertical;
-            caricaParametri();
+            //caricaParametri();
         }
         private void caricaParametri() 
         {
+            Parametri par=new Parametri();
+            par = Parametri.GetParametro("code_len");
+            code_len=Convert.ToInt32(par.Value);
+            par = Parametri.GetParametro("keyEnd");
+            // keyEnd=Keys(par.Key);
+            par = Parametri.GetParametro("minutiValidita");
+            minutiValidita=Convert.ToInt32(par.Value);
+            par = Parametri.GetParametro("ipArduino");
+            ipArduino=par.Value.ToString();
+            par = Parametri.GetParametro("portaArduino");
+            portaArduino=Convert.ToInt32(par.Value);
+            par = Parametri.GetParametro("inching");
+            inching=Convert.ToInt32(par.Value);
+
+
             
         }
         protected override void OnLoad(EventArgs e)
@@ -91,7 +106,7 @@ namespace MicriCancelli
                 // Controlla se il tasto premuto è il tasto "E" ho finito la lettura
                 // il barcode con codifica COD39 è fatto da * SEI cifre + "E" + *
                 // ad esempio *123456E*  viene letto come codice 123456   
-                txtLogLettore.AppendText(" - inputbuffer: " +inputBuffer.ToString() + Environment.NewLine);
+                //txtLogLettore.AppendText(" - inputbuffer: " +inputBuffer.ToString() + Environment.NewLine);
 
                 if (key == keyEnd && inputBuffer.ToString().Length != code_len + 1) 
                 {
@@ -184,7 +199,9 @@ namespace MicriCancelli
 
         private async void btnApri_Click(object sender, EventArgs e)
         {
-            await Commons.ApreChiude();
+            Parametri par=new Parametri();
+            par = Parametri.GetParametro("inching");
+            await Commons.ApreChiude(Convert.ToInt32(par.Value));
         }
 
         private void btnChiudi_Click(object sender, EventArgs e)
@@ -214,7 +231,9 @@ namespace MicriCancelli
             
             manager.InsertCodice(Convert.ToInt32(codice), data, ora, "", "");
 
-            
+            txtLogLettore.AppendText(DateTime.Now + " - Generato Codice: " + codice + Environment.NewLine);
+
+
 
             ReportDocument rep = new ReportDocument();
             rep.Load(Application.StartupPath + "\\biglietto.rpt");
