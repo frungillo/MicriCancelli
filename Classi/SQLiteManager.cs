@@ -111,5 +111,43 @@ namespace MicriCancelli.Classi
                 }
             }
         }
+        public Parametri GetParametro(string key)
+        {
+            Parametri par = new Parametri();
+            string query = "SELECT id_parametro, key, value FROM parametri WHERE key = @key";
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            using (SQLiteCommand command = new SQLiteCommand(query, connection))
+            
+            {
+                command.Parameters.AddWithValue("@key", key);
+                connection.Open();
+                using (var reader = command.ExecuteReader())
+                {
+                    reader.Read();
+                    if (reader.StepCount == 1)
+                    {
+                        par.Id_parametro = Convert.ToInt32(reader["id_parametro"]);
+                        par.Key = reader["key"].ToString();
+                        par.Value = reader["value"].ToString();
+                        
+                    }
+                    reader.Close();
+                    return par;
+                }
+            }
+        }
+        public void UpdateParametro(int parametroId, string key, string value)
+        {
+            string query = "UPDATE parametri SET key = @key, value = @value WHERE id_parametro = @parametroId";
+            using (SQLiteConnection connection = new SQLiteConnection(connectionString))
+            using (SQLiteCommand command = new SQLiteCommand(query, connection))
+            {
+                
+                command.Parameters.AddWithValue("@key", key);
+                command.Parameters.AddWithValue("@value", value);
+                command.Parameters.AddWithValue("@parametroId", parametroId);
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }

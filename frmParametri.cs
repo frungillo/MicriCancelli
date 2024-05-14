@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MicriCancelli.Classi;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -24,7 +25,15 @@ namespace MicriCancelli
         }
         private void leggiParametri()
         {
-
+            Parametri par =new Parametri();
+            foreach (Control item in grpParametri.Controls)
+            {
+                if (item.GetType() == typeof(TextBox))
+                {
+                    par = Parametri.GetParametro(item.Tag.ToString());
+                    try { item.Text = par.Value.ToString(); } catch { }
+                }
+            }
         }
         private void btnSblocca_Click(object sender, EventArgs e)
         {
@@ -38,6 +47,7 @@ namespace MicriCancelli
                         item.Enabled = true;
                     }
                 }
+                leggiParametri();
             }
         }
     }

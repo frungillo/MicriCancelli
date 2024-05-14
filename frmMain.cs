@@ -33,7 +33,7 @@ namespace MicriCancelli
         private  int code_len = 6;
         private  Keys keyEnd = Keys.E;
         private int minutiValidita = 30;
-        private string ipArduino = "";
+        private string ipArduino = "10.99.5.101";
         private int portaArduino = 80;
 
 
@@ -184,8 +184,8 @@ namespace MicriCancelli
         {
             // COMANDA L'APERTURA MANUALE 
                 Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse("10.99.5.101");
-                System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, 80);
+                System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(ipArduino);
+                System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, portaArduino);
                 soc.Connect(remoteEP);
                 byte[] byData = System.Text.Encoding.ASCII.GetBytes("apri*");
                 soc.Send(byData);
@@ -196,8 +196,8 @@ namespace MicriCancelli
         {
             // COMANDA LA CHIUSURA MANUALE 
             Socket soc = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse("10.99.5.101");
-                System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, 80);
+                System.Net.IPAddress ipAdd = System.Net.IPAddress.Parse(ipArduino);
+                System.Net.IPEndPoint remoteEP = new IPEndPoint(ipAdd, portaArduino);
                 soc.Connect(remoteEP);
                 byte[] byData = System.Text.Encoding.ASCII.GetBytes("chiudi*");
                 soc.Send(byData);

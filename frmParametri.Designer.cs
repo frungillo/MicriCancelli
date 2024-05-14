@@ -95,7 +95,7 @@
             this.txtMinutiValidita.Name = "txtMinutiValidita";
             this.txtMinutiValidita.Size = new System.Drawing.Size(100, 29);
             this.txtMinutiValidita.TabIndex = 5;
-            this.txtMinutiValidita.Tag = "KeyEnd";
+            this.txtMinutiValidita.Tag = "minutiValidita";
             // 
             // label3
             // 
@@ -114,7 +114,7 @@
             this.txtIPArduino.Name = "txtIPArduino";
             this.txtIPArduino.Size = new System.Drawing.Size(100, 29);
             this.txtIPArduino.TabIndex = 7;
-            this.txtIPArduino.Tag = "KeyEnd";
+            this.txtIPArduino.Tag = "ipArduino";
             // 
             // label4
             // 
@@ -133,7 +133,7 @@
             this.txtPortaArduino.Name = "txtPortaArduino";
             this.txtPortaArduino.Size = new System.Drawing.Size(100, 29);
             this.txtPortaArduino.TabIndex = 9;
-            this.txtPortaArduino.Tag = "KeyEnd";
+            this.txtPortaArduino.Tag = "portaArduino";
             // 
             // label5
             // 

@@ -148,6 +148,7 @@
     </Compile>
     <Compile Include="Classi\Codici.cs" />
     <Compile Include="Classi\Commons.cs" />
+    <Compile Include="Classi\Parametri.cs" />
     <Compile Include="Classi\RegexUtilities.cs" />
     <Compile Include="Classi\SQLiteManager.cs" />
     <Compile Include="frmMain.cs">
