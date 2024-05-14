@@ -32,6 +32,7 @@
             this.txtLogLettore = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnSettings = new System.Windows.Forms.Button();
             this.btnGeneraTicket = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnChiudi = new System.Windows.Forms.Button();
@@ -56,11 +57,23 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Operazioni di lettura";
             // 
+            // btnSettings
+            // 
+            this.btnSettings.BackColor = System.Drawing.Color.White;
+            this.btnSettings.Image = global::MicriCancelli.Properties.Resources.settings_100;
+            this.btnSettings.Location = new System.Drawing.Point(367, 312);
+            this.btnSettings.Name = "btnSettings";
+            this.btnSettings.Size = new System.Drawing.Size(101, 101);
+            this.btnSettings.TabIndex = 9;
+            this.toolTip1.SetToolTip(this.btnSettings, "Setting");
+            this.btnSettings.UseVisualStyleBackColor = false;
+            this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
+            // 
             // btnGeneraTicket
             // 
             this.btnGeneraTicket.BackColor = System.Drawing.Color.White;
             this.btnGeneraTicket.Image = global::MicriCancelli.Properties.Resources.barcode_100;
-            this.btnGeneraTicket.Location = new System.Drawing.Point(660, 40);
+            this.btnGeneraTicket.Location = new System.Drawing.Point(367, 40);
             this.btnGeneraTicket.Name = "btnGeneraTicket";
             this.btnGeneraTicket.Size = new System.Drawing.Size(101, 101);
             this.btnGeneraTicket.TabIndex = 8;
@@ -83,7 +96,7 @@
             // 
             this.btnChiudi.BackColor = System.Drawing.Color.White;
             this.btnChiudi.Image = global::MicriCancelli.Properties.Resources.closeBar1;
-            this.btnChiudi.Location = new System.Drawing.Point(660, 330);
+            this.btnChiudi.Location = new System.Drawing.Point(626, 40);
             this.btnChiudi.Name = "btnChiudi";
             this.btnChiudi.Size = new System.Drawing.Size(101, 101);
             this.btnChiudi.TabIndex = 3;
@@ -95,7 +108,7 @@
             // 
             this.btnApri.BackColor = System.Drawing.Color.White;
             this.btnApri.Image = global::MicriCancelli.Properties.Resources.openBar;
-            this.btnApri.Location = new System.Drawing.Point(530, 330);
+            this.btnApri.Location = new System.Drawing.Point(498, 40);
             this.btnApri.Name = "btnApri";
             this.btnApri.Size = new System.Drawing.Size(101, 101);
             this.btnApri.TabIndex = 2;
@@ -107,13 +120,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(885, 450);
+            this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnGeneraTicket);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnChiudi);
             this.Controls.Add(this.btnApri);
             this.Controls.Add(this.txtLogLettore);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.ShowIcon = false;
@@ -132,6 +147,7 @@
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnGeneraTicket;
+        private System.Windows.Forms.Button btnSettings;
     }
 }
 

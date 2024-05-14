@@ -30,19 +30,26 @@ namespace MicriCancelli
 
         // alcuni parametri
 
-        private const int CODE_LEN = 6;
-        private const Keys keyEnd = Keys.E;
+        private  int code_len = 6;
+        private  Keys keyEnd = Keys.E;
+        private int minutiValidita = 30;
+        private string ipArduino = "";
+        private int portaArduino = 80;
+
 
         // Inizializza un nuovo gestore SQLiteManager
-        // string dbFilePath = @"D:\Sviluppo\MicriCancelli\DataBase\cancelli.db"; // Imposta il percorso del file del database SQLite
+       
         string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
-        //D:/Sviluppo/MicriCancelli/DataBase/cancelli.
 
         public frmMain()
         {
             InitializeComponent();
             keyboardProc = HookCallback;
             txtLogLettore.ScrollBars=ScrollBars.Vertical;
+            caricaParametri();
+        }
+        private void caricaParametri() 
+        {
             
         }
         protected override void OnLoad(EventArgs e)
@@ -77,53 +84,79 @@ namespace MicriCancelli
                 Keys key = (Keys)vkCode;
 
                 // Controlla se il tasto premuto è il tasto "Invio", esco
-                if (key == Keys.Return) return CallNextHookEx(hookID, nCode, wParam, lParam);
-               
+                if (key == Keys.Return || inputBuffer.Length > code_len + 1) return CallNextHookEx(hookID, nCode, wParam, lParam);
+                
                 // Controlla se il tasto premuto è il tasto "E" ho finito la lettura
                 // il barcode con codifica COD39 è fatto da * SEI cifre + "E" + *
-                // ad esempio *123456E*  viene letto come codice 123456
+                // ad esempio *123456E*  viene letto come codice 123456   
+                txtLogLettore.AppendText(" - inputbuffer: " +inputBuffer.ToString() + Environment.NewLine);
 
-                if (key == keyEnd)
+                if (key == keyEnd && inputBuffer.ToString().Length != code_len + 1) 
                 {
-                    // Aggiungi la stringa bufferizzata alla TextBox
-                    string codice = inputBuffer.ToString().Substring(0, CODE_LEN);
-                    txtLogLettore.AppendText(DateTime.Now + " - Letto Codice: " + codice + Environment.NewLine);
+                    inputBuffer.Clear();
+                    return CallNextHookEx(hookID, nCode, wParam, lParam);
+                }
 
+                if (key == keyEnd && inputBuffer.ToString().Length == code_len + 1)
+
+                {
+                     // Aggiungi la stringa bufferizzata alla TextBox
+                    string buffer = inputBuffer.ToString();
+                    txtLogLettore.AppendText(" - buffer: " + buffer + Environment.NewLine);
+
+                    txtLogLettore.AppendText(DateTime.Now + " - Letto Codice: " + buffer.Substring(0, code_len) + Environment.NewLine);
+                    inputBuffer.Clear();
                     // a questo punto ho un POTENZIALE codice a barre
                     // verifico se esiste in tabella Codici
+                    try
+                    {
+                        string codice = buffer.Substring(0, code_len);
+                        if (Codici.isCodiceEsistente(Convert.ToInt32(codice)))
+                        {
+                            if (Codici.isCodiceValido(Convert.ToInt32(codice),minutiValidita))
+                            {
+                                
+                                // AGGIORNO LA TABELLA CODICI
+                                Codici cod = new Codici();
+                                string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
+                                SQLiteManager manager = new SQLiteManager(dbFilePath);
+                                cod = manager.ReadCodice(Convert.ToInt32(codice));
+                                cod.Data_uso = DateTime.Now.ToString("dd/MM/yyyy");
+                                cod.Ora_uso = DateTime.Now.ToString("HH:mm");
+                                manager.UpdateCodice(cod.Id_codice, cod.Codice, cod.Data_emissione, cod.Ora_emissione, cod.Data_uso, cod.Ora_uso);
+                                txtLogLettore.AppendText(DateTime.Now + " - Aperta barriera per: " + codice + Environment.NewLine);
+                                inputBuffer.Clear();
 
-                    if (Codici.isCodiceEsistente(Convert.ToInt32(codice)))
-                    {
-                        if (Codici.isCodiceValido(Convert.ToInt32(codice)))
-                        {
-                            // ALZO LA BARRIERA
-                            // AGGIORNO LA TABELLA CODICI
-                            Codici cod = new Codici();
-                            string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
-                            SQLiteManager manager = new SQLiteManager(dbFilePath);
-                            cod = manager.ReadCodice(Convert.ToInt32(codice));
-                            cod.Data_uso = DateTime.Now.ToString("dd/MM/yyyy");
-                            cod.Ora_uso = DateTime.Now.ToString("HH:mm");
-                            manager.UpdateCodice(cod.Id_codice, cod.Codice, cod.Data_emissione, cod.Ora_emissione, cod.Data_uso, cod.Ora_uso);
-                            txtLogLettore.AppendText(DateTime.Now + " - Aperta barriera per: " + codice + Environment.NewLine);
+                                // ALZO LA BARRIERA
+
+
+
+
+
+                                return CallNextHookEx(hookID, nCode, wParam, lParam);
+                            }
+                            else // codice esistente ma non utilizzabile
+                            {
+                                txtLogLettore.AppendText(DateTime.Now + " - Passaggio negato per: " + codice + Environment.NewLine);
+                                inputBuffer.Clear();
+                                return CallNextHookEx(hookID, nCode, wParam, lParam);
+                            }
                         }
-                        else // codice esistente ma non utilizzabile
-                        {
-                            txtLogLettore.AppendText(DateTime.Now + " - Passaggio negato per: " + codice + Environment.NewLine);
-                        }
+                        // è arrivato qualcosa che assomiglia ad un codice ma non esiste in tabella
+                        
                     }
-                    else // è arrivato qualcosa che assomiglia ad un codice ma non esiste in tabella
-                    {
-                        txtLogLettore.Text = "";
-                    }
+                    catch { inputBuffer.Clear(); }
+
                     // Pulisci il buffer
                     inputBuffer.Clear();
+                    return CallNextHookEx(hookID, nCode, wParam, lParam);
                 }
                 else
                 {
                     // Altrimenti, aggiungi il carattere al buffer
                     char keyChar = (char)vkCode;
-                    inputBuffer.Append(keyChar);
+                    if (inputBuffer.Length < 7) inputBuffer.Append(keyChar);
+                    else inputBuffer.Clear();
                 }
             }
             return CallNextHookEx(hookID, nCode, wParam, lParam);
@@ -174,14 +207,10 @@ namespace MicriCancelli
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtLogLettore.Text = "";
+            inputBuffer.Clear();
+           
         }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            
-            MessageBox.Show(" Valido?" + Codici.isCodiceValido(654321).ToString());
-        }
-
+        
         private void btnGeneraTicket_Click(object sender, EventArgs e)
         {
             // genera e stampa un nuovo biglietto. Come string che poi memoorizzo come intero che non inizia con 0
@@ -196,6 +225,13 @@ namespace MicriCancelli
             string data = DateTime.Now.ToString("dd/MM/yyyy");
             
             manager.InsertCodice(Convert.ToInt32(codice), data, ora, "", "");
+        }
+
+        private void btnSettings_Click(object sender, EventArgs e)
+        {
+            frmParametri frm = new frmParametri();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.ShowDialog(this);
         }
     }
 }

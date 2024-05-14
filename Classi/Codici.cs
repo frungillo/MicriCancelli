@@ -24,7 +24,7 @@ namespace MicriCancelli.Classi
 
         public Codici() { }
         
-        public static bool isCodiceValido(int id_codice) 
+        public static bool isCodiceValido(int id_codice, int minuti) 
         {
             string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
             SQLiteManager manager = new SQLiteManager(dbFilePath);
@@ -34,7 +34,7 @@ namespace MicriCancelli.Classi
             DateTime data_emissione=DateTime.Parse(codice.Data_emissione+" "+codice.Ora_emissione);
             if (codice.data_uso == "") // mai usato, scaduto?
             {
-                if (data_emissione.AddMinutes(30) >= DateTime.Now) return true;  
+                if (data_emissione.AddMinutes(minuti) >= DateTime.Now) return true;  
                 else return false;
             }
             //usato già
