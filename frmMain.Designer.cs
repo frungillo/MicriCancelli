@@ -32,10 +32,10 @@
             this.txtLogLettore = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnClose = new System.Windows.Forms.Button();
             this.btnSettings = new System.Windows.Forms.Button();
             this.btnGeneraTicket = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
-            this.btnChiudi = new System.Windows.Forms.Button();
             this.btnApri = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -56,6 +56,18 @@
             this.label1.Size = new System.Drawing.Size(100, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Operazioni di lettura";
+            // 
+            // btnClose
+            // 
+            this.btnClose.BackColor = System.Drawing.Color.White;
+            this.btnClose.Image = global::MicriCancelli.Properties.Resources.close_100;
+            this.btnClose.Location = new System.Drawing.Point(772, 312);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(101, 101);
+            this.btnClose.TabIndex = 10;
+            this.toolTip1.SetToolTip(this.btnClose, "Setting");
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
             // btnSettings
             // 
@@ -92,23 +104,11 @@
             this.btnClear.UseVisualStyleBackColor = true;
             this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
             // 
-            // btnChiudi
-            // 
-            this.btnChiudi.BackColor = System.Drawing.Color.White;
-            this.btnChiudi.Image = global::MicriCancelli.Properties.Resources.closeBar1;
-            this.btnChiudi.Location = new System.Drawing.Point(626, 40);
-            this.btnChiudi.Name = "btnChiudi";
-            this.btnChiudi.Size = new System.Drawing.Size(101, 101);
-            this.btnChiudi.TabIndex = 3;
-            this.toolTip1.SetToolTip(this.btnChiudi, "Chiudi Barriera");
-            this.btnChiudi.UseVisualStyleBackColor = false;
-            this.btnChiudi.Click += new System.EventHandler(this.btnChiudi_Click);
-            // 
             // btnApri
             // 
             this.btnApri.BackColor = System.Drawing.Color.White;
             this.btnApri.Image = global::MicriCancelli.Properties.Resources.openBar;
-            this.btnApri.Location = new System.Drawing.Point(498, 40);
+            this.btnApri.Location = new System.Drawing.Point(772, 40);
             this.btnApri.Name = "btnApri";
             this.btnApri.Size = new System.Drawing.Size(101, 101);
             this.btnApri.TabIndex = 2;
@@ -121,11 +121,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(885, 450);
+            this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnGeneraTicket);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnChiudi);
             this.Controls.Add(this.btnApri);
             this.Controls.Add(this.txtLogLettore);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
@@ -142,12 +142,12 @@
 
         private System.Windows.Forms.TextBox txtLogLettore;
         private System.Windows.Forms.Button btnApri;
-        private System.Windows.Forms.Button btnChiudi;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnGeneraTicket;
         private System.Windows.Forms.Button btnSettings;
+        private System.Windows.Forms.Button btnClose;
     }
 }
 

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.txtKeyEnd = new System.Windows.Forms.TextBox();
             this.txtCodeLen = new System.Windows.Forms.TextBox();
@@ -50,6 +51,9 @@
             this.btnSalvaInching = new System.Windows.Forms.Button();
             this.btnSblocca = new System.Windows.Forms.Button();
             this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.btnClose = new System.Windows.Forms.Button();
             this.grpParametri.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -71,6 +75,7 @@
             this.txtKeyEnd.Size = new System.Drawing.Size(100, 29);
             this.txtKeyEnd.TabIndex = 1;
             this.txtKeyEnd.Tag = "KeyEnd";
+            this.toolTip1.SetToolTip(this.txtKeyEnd, "Solo UN carattere esistente su tastiera");
             // 
             // txtCodeLen
             // 
@@ -81,6 +86,7 @@
             this.txtCodeLen.Size = new System.Drawing.Size(100, 29);
             this.txtCodeLen.TabIndex = 3;
             this.txtCodeLen.Tag = "code_len";
+            this.toolTip1.SetToolTip(this.txtCodeLen, "Intero, rapresenta la lunghezza dei codici a barre");
             // 
             // label2
             // 
@@ -100,6 +106,7 @@
             this.txtMinutiValidita.Size = new System.Drawing.Size(100, 29);
             this.txtMinutiValidita.TabIndex = 5;
             this.txtMinutiValidita.Tag = "minutiValidita";
+            this.toolTip1.SetToolTip(this.txtMinutiValidita, "Intero, indica per quinti minuti è valido un ticket dopo l\'emissione");
             // 
             // label3
             // 
@@ -119,6 +126,7 @@
             this.txtIPArduino.Size = new System.Drawing.Size(100, 29);
             this.txtIPArduino.TabIndex = 7;
             this.txtIPArduino.Tag = "ipArduino";
+            this.toolTip1.SetToolTip(this.txtIPArduino, "Formato indirizzo IPv4");
             // 
             // label4
             // 
@@ -138,6 +146,7 @@
             this.txtPortaArduino.Size = new System.Drawing.Size(100, 29);
             this.txtPortaArduino.TabIndex = 9;
             this.txtPortaArduino.Tag = "portaArduino";
+            this.toolTip1.SetToolTip(this.txtPortaArduino, "Intero, porta TCP da associare all\'IP");
             // 
             // label5
             // 
@@ -158,7 +167,7 @@
             this.btnSaveKeyEnd.TabIndex = 12;
             this.btnSaveKeyEnd.Tag = "KeyEnd";
             this.btnSaveKeyEnd.UseVisualStyleBackColor = true;
-            this.btnSaveKeyEnd.Click += new System.EventHandler(this.btnSaveKeyEnd_Click);
+            this.btnSaveKeyEnd.Click += new System.EventHandler(this.btnSalvaParametro_Click);
             // 
             // btnSalvaMinutiValidita
             // 
@@ -237,7 +246,7 @@
             this.grpParametri.Controls.Add(this.txtPortaArduino);
             this.grpParametri.Location = new System.Drawing.Point(29, 138);
             this.grpParametri.Name = "grpParametri";
-            this.grpParametri.Size = new System.Drawing.Size(742, 300);
+            this.grpParametri.Size = new System.Drawing.Size(621, 300);
             this.grpParametri.TabIndex = 18;
             this.grpParametri.TabStop = false;
             this.grpParametri.Tag = "portArduino";
@@ -260,6 +269,7 @@
             this.txtInching.Size = new System.Drawing.Size(100, 29);
             this.txtInching.TabIndex = 18;
             this.txtInching.Tag = "inching";
+            this.toolTip1.SetToolTip(this.txtInching, "Intero, indica quanti millisecondi il relè resta eccitato");
             // 
             // btnSalvaInching
             // 
@@ -280,6 +290,7 @@
             this.btnSblocca.Name = "btnSblocca";
             this.btnSblocca.Size = new System.Drawing.Size(101, 101);
             this.btnSblocca.TabIndex = 19;
+            this.toolTip1.SetToolTip(this.btnSblocca, "Sblocca e Modifica");
             this.btnSblocca.UseVisualStyleBackColor = false;
             this.btnSblocca.Click += new System.EventHandler(this.btnSblocca_Click);
             // 
@@ -293,12 +304,36 @@
             this.label7.TabIndex = 20;
             this.label7.Text = "ATTENZIONE: i valori dei textBox non sono soggetti a controlli formali";
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(347, 38);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(188, 16);
+            this.label8.TabIndex = 21;
+            this.label8.Text = "Utilizzare solo valori consentiti.";
+            // 
+            // btnClose
+            // 
+            this.btnClose.BackColor = System.Drawing.Color.White;
+            this.btnClose.Image = global::MicriCancelli.Properties.Resources.close_100;
+            this.btnClose.Location = new System.Drawing.Point(687, 337);
+            this.btnClose.Name = "btnClose";
+            this.btnClose.Size = new System.Drawing.Size(101, 101);
+            this.btnClose.TabIndex = 22;
+            this.toolTip1.SetToolTip(this.btnClose, "Sblocca e Modifica");
+            this.btnClose.UseVisualStyleBackColor = false;
+            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            // 
             // frmParametri
             // 
             this.AcceptButton = this.btnSblocca;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnClose);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.btnSblocca);
             this.Controls.Add(this.grpParametri);
@@ -339,5 +374,8 @@
         private System.Windows.Forms.TextBox txtInching;
         private System.Windows.Forms.Button btnSalvaInching;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button btnClose;
     }
 }

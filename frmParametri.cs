@@ -51,10 +51,7 @@ namespace MicriCancelli
             }
         }
 
-        private void btnSaveKeyEnd_Click(object sender, EventArgs e)
-        {
-            // per adesso non gestito
-        }
+        
 
         private void btnSalvaParametro_Click(object sender, EventArgs e)
         {
@@ -65,6 +62,9 @@ namespace MicriCancelli
             par = Parametri.GetParametro(item.Tag.ToString());
             switch (item.Tag.ToString()) 
             {
+                case "keyEnd":
+                    par.Value=txtKeyEnd.Text;
+                    break;
                 case "code_len":
                     par.Value = txtCodeLen.Text;
                     break;
@@ -87,6 +87,11 @@ namespace MicriCancelli
             
             Parametri.UpdateParametro(par); 
             leggiParametri();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

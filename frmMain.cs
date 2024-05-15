@@ -56,8 +56,7 @@ namespace MicriCancelli
             par = Parametri.GetParametro("code_len");
             code_len=Convert.ToInt32(par.Value);
             par = Parametri.GetParametro("KeyEnd");
-            //keyEnd= (Keys)Enum.Parse(typeof(Keys), par.Value, true);
-            keyEnd = (Keys)Enum.Parse(typeof(Keys), "ç", true);
+            keyEnd= (Keys)Enum.Parse(typeof(Keys), par.Value, true);
             par = Parametri.GetParametro("minutiValidita");
             minutiValidita=Convert.ToInt32(par.Value);
             par = Parametri.GetParametro("ipArduino");
@@ -216,11 +215,6 @@ namespace MicriCancelli
             await Commons.ApreChiude(Convert.ToInt32(par.Value));
         }
 
-        private void btnChiudi_Click(object sender, EventArgs e)
-        {
-           
-        }
-
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtLogLettore.Text = "";
@@ -259,6 +253,11 @@ namespace MicriCancelli
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.ShowDialog(this);
             caricaParametri();
+        }
+
+        private void btnClose_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
