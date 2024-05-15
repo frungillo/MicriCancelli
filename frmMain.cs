@@ -48,15 +48,16 @@ namespace MicriCancelli
             InitializeComponent();
             keyboardProc = HookCallback;
             txtLogLettore.ScrollBars=ScrollBars.Vertical;
-            //caricaParametri();
+            caricaParametri();
         }
         private void caricaParametri() 
         {
             Parametri par=new Parametri();
             par = Parametri.GetParametro("code_len");
             code_len=Convert.ToInt32(par.Value);
-            par = Parametri.GetParametro("keyEnd");
-            // keyEnd=Keys(par.Key);
+            par = Parametri.GetParametro("KeyEnd");
+            //keyEnd= (Keys)Enum.Parse(typeof(Keys), par.Value, true);
+            keyEnd = (Keys)Enum.Parse(typeof(Keys), "ç", true);
             par = Parametri.GetParametro("minutiValidita");
             minutiValidita=Convert.ToInt32(par.Value);
             par = Parametri.GetParametro("ipArduino");
@@ -101,11 +102,20 @@ namespace MicriCancelli
                 Keys key = (Keys)vkCode;
 
                 // Controlla se il tasto premuto è il tasto "Invio", esco
-                if (key == Keys.Return || inputBuffer.Length > code_len + 1) return CallNextHookEx(hookID, nCode, wParam, lParam);
-                
+                if (key == Keys.Return || inputBuffer.Length > code_len + 1)
+                {
+                    inputBuffer.Clear();
+                    return CallNextHookEx(hookID, nCode, wParam, lParam);
+                }
+
                 // Controlla se il tasto premuto è il tasto "E" ho finito la lettura
                 // il barcode con codifica COD39 è fatto da * SEI cifre + "E" + *
                 // ad esempio *123456E*  viene letto come codice 123456   
+                if (key == Keys.F12) 
+                {
+                    MessageBox.Show("premuto tasto F12", "Notifica");
+                    return CallNextHookEx(hookID, nCode, wParam, lParam);
+                } 
                 txtLogLettore.AppendText(" - inputbuffer: " +inputBuffer.ToString() + Environment.NewLine);
 
                 if (key == keyEnd && inputBuffer.ToString().Length != code_len + 1) 
@@ -127,7 +137,7 @@ namespace MicriCancelli
                     try
                     {
                         string codice = buffer.Substring(0, code_len);
-                        if (Codici.isCodiceEsistente(Convert.ToInt32(codice)))
+                        if(Codici.isCodiceEsistente(Convert.ToInt32(codice)))
                         {
                             if (Codici.isCodiceValido(Convert.ToInt32(codice), minutiValidita))
                             {
@@ -145,9 +155,7 @@ namespace MicriCancelli
 
                                 // ALZO LA BARRIERA
 
-
-
-
+                                Commons.ApreChiude(inching);
 
                                 return CallNextHookEx(hookID, nCode, wParam, lParam);
                             }
@@ -161,7 +169,7 @@ namespace MicriCancelli
                         // è arrivato qualcosa che assomiglia ad un codice ma non esiste in tabella
                         else 
                         {
-                            txtLogLettore.AppendText(DateTime.Now + " - Codice non in tabella129988E129988E129988E129988E: " + codice + Environment.NewLine);
+                            txtLogLettore.AppendText(DateTime.Now + " - Codice non in tabella: " + codice + Environment.NewLine);
                             inputBuffer.Clear();
 
                         }
@@ -237,14 +245,11 @@ namespace MicriCancelli
 
             txtLogLettore.AppendText(DateTime.Now + " - Generato Codice: " + codice + Environment.NewLine);
 
-
-
             ReportDocument rep = new ReportDocument();
             rep.Load(Application.StartupPath + "\\biglietto.rpt");
-            rep.SetParameterValue(0, "*" + codice + "E*");
+            rep.SetParameterValue(0, "*" + codice + keyEnd+"*");
             rep.SetParameterValue(1, codice);
             rep.PrintToPrinter(1,false,1,1);
-
 
         }
 
@@ -253,6 +258,7 @@ namespace MicriCancelli
             frmParametri frm = new frmParametri();
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.ShowDialog(this);
+            caricaParametri();
         }
     }
 }
