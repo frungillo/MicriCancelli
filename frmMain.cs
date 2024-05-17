@@ -101,6 +101,7 @@ namespace MicriCancelli
                 Keys key = (Keys)vkCode;
 
                 // Controlla se il tasto premuto è il tasto "Invio", esco
+                
                 if (key == Keys.Return || inputBuffer.Length > code_len + 1)
                 {
                     inputBuffer.Clear();
@@ -110,12 +111,12 @@ namespace MicriCancelli
                 // Controlla se il tasto premuto è il tasto "E" ho finito la lettura
                 // il barcode con codifica COD39 è fatto da * SEI cifre + "E" + *
                 // ad esempio *123456E*  viene letto come codice 123456   
-                if (key == Keys.F12) 
+                if (key == Keys.F12 || key == Keys.P) 
                 {
-                    MessageBox.Show("premuto tasto F12", "Notifica");
+                    GeneraTicket();
                     return CallNextHookEx(hookID, nCode, wParam, lParam);
                 } 
-                txtLogLettore.AppendText(" - inputbuffer: " +inputBuffer.ToString() + Environment.NewLine);
+               // txtLogLettore.AppendText(" - inputbuffer: " +inputBuffer.ToString() + Environment.NewLine);
 
                 if (key == keyEnd && inputBuffer.ToString().Length != code_len + 1) 
                 {
@@ -221,29 +222,33 @@ namespace MicriCancelli
             inputBuffer.Clear();
            
         }
-        
-        private void btnGeneraTicket_Click(object sender, EventArgs e)
-        {
+
+        private void GeneraTicket() {
             // genera e stampa un nuovo biglietto. Come string che poi memoorizzo come intero che non inizia con 0
             string codice;
             do codice = Commons.RandomDigits(6);
-            while ( Codici.isCodiceEsistente(Convert.ToInt32(codice)) || codice.Substring(0, 1) == "0");
+            while (Codici.isCodiceEsistente(Convert.ToInt32(codice)) || codice.Substring(0, 1) == "0");
 
             // ho un nuovo codice, inserisco in tabella
             SQLiteManager manager = new SQLiteManager(dbFilePath);
             // Inserisci un nuovo codice con data e ora di uso specificate
-            string ora = DateTime.Now.ToString("HH:mm"); 
+            string ora = DateTime.Now.ToString("HH:mm");
             string data = DateTime.Now.ToString("dd/MM/yyyy");
-            
+
             manager.InsertCodice(Convert.ToInt32(codice), data, ora, "", "");
 
             txtLogLettore.AppendText(DateTime.Now + " - Generato Codice: " + codice + Environment.NewLine);
 
             ReportDocument rep = new ReportDocument();
             rep.Load(Application.StartupPath + "\\biglietto.rpt");
-            rep.SetParameterValue(0, "*" + codice + keyEnd+"*");
+            rep.SetParameterValue(0, "*" + codice + keyEnd + "*");
             rep.SetParameterValue(1, codice);
-            rep.PrintToPrinter(1,false,1,1);
+            rep.PrintToPrinter(1, false, 1, 1);
+        }
+        
+        private void btnGeneraTicket_Click(object sender, EventArgs e)
+        {
+           GeneraTicket();
 
         }
 
