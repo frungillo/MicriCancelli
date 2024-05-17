@@ -179,6 +179,7 @@
             this.btnSalvaMinutiValidita.TabIndex = 13;
             this.btnSalvaMinutiValidita.Tag = "minutiValidita";
             this.btnSalvaMinutiValidita.UseVisualStyleBackColor = true;
+            this.btnSalvaMinutiValidita.Click += new System.EventHandler(this.btnSalvaParametro_Click);
             // 
             // btnSalvaCodeLen
             // 
@@ -202,6 +203,7 @@
             this.btnSalvaIPArduino.TabIndex = 15;
             this.btnSalvaIPArduino.Tag = "ipArduino";
             this.btnSalvaIPArduino.UseVisualStyleBackColor = true;
+            this.btnSalvaIPArduino.Click += new System.EventHandler(this.btnSalvaParametro_Click);
             // 
             // btnSalvaPortaArduino
             // 
@@ -213,6 +215,7 @@
             this.btnSalvaPortaArduino.TabIndex = 16;
             this.btnSalvaPortaArduino.Tag = "portaArduino";
             this.btnSalvaPortaArduino.UseVisualStyleBackColor = true;
+            this.btnSalvaPortaArduino.Click += new System.EventHandler(this.btnSalvaParametro_Click);
             // 
             // txtPassword
             // 
@@ -281,6 +284,7 @@
             this.btnSalvaInching.TabIndex = 19;
             this.btnSalvaInching.Tag = "inching";
             this.btnSalvaInching.UseVisualStyleBackColor = true;
+            this.btnSalvaInching.Click += new System.EventHandler(this.btnSalvaParametro_Click);
             // 
             // btnSblocca
             // 
