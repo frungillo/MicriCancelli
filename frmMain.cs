@@ -16,6 +16,9 @@ using System.Data.SQLite;
 using static log4net.Appender.RollingFileAppender;
 using System.Threading;
 using CrystalDecisions.CrystalReports.Engine;
+using System.Reflection;
+
+
 
 namespace MicriCancelli
 {
@@ -43,12 +46,56 @@ namespace MicriCancelli
        
         string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
 
+        // parte dedicata all'autorecovery
+        public delegate int RecoveryDelegate(IntPtr parameter);
+
+        [DllImport("kernel32.dll")]
+        private static extern int RegisterApplicationRecoveryCallback(
+                RecoveryDelegate recoveryCallback,
+                IntPtr parameter,
+                uint pingInterval,
+                uint flags);
+
+        [DllImport("kernel32.dll")]
+        private static extern void ApplicationRecoveryFinished(bool success);
+
+        private static void RegisterForRecovery()
+        {
+            var callback = new RecoveryDelegate(p =>
+            {
+                Process.Start(Assembly.GetEntryAssembly().Location);
+                ApplicationRecoveryFinished(true);
+                return 0;
+            });
+
+            var interval = 100U;
+            var flags = 0U;
+
+            RegisterApplicationRecoveryCallback(callback, IntPtr.Zero, interval, flags);
+        }
+
         public frmMain()
         {
+            RegisterForRecovery();
+
             InitializeComponent();
             keyboardProc = HookCallback;
             txtLogLettore.ScrollBars=ScrollBars.Vertical;
             caricaParametri();
+            this.FormClosing += (s, e) => {
+                var result = MessageBox.Show("Confermi Chiusura?", "Chiusura?", MessageBoxButtons.YesNo);
+                if (result == DialogResult.No)
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+                    // Do some work such as closing connection with sqlite3 DB
+                    Application.Exit();
+                }
+            };
+            this.TopMost = true;
+            
         }
         private void caricaParametri() 
         {
@@ -65,9 +112,6 @@ namespace MicriCancelli
             portaArduino=Convert.ToInt32(par.Value);
             par = Parametri.GetParametro("inching");
             inching=Convert.ToInt32(par.Value);
-
-
-            
         }
         protected override void OnLoad(EventArgs e)
         {
@@ -264,5 +308,6 @@ namespace MicriCancelli
         {
             this.Close();
         }
+
     }
 }

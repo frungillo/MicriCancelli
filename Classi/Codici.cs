@@ -49,5 +49,14 @@ namespace MicriCancelli.Classi
             return !(codice.codice==0);
            
         }
+        public static List<Codici> getAll(string filtro = "1=1") 
+        {
+            string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
+            SQLiteManager manager = new SQLiteManager(dbFilePath);
+            Codici codice = new Codici();
+            List<Codici> list = new List<Codici>();
+            list = manager.ReadAllCodici(filtro);
+            return list;
+        }
     }
 }

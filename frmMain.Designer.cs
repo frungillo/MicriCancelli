@@ -37,6 +37,7 @@
             this.btnGeneraTicket = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnApri = new System.Windows.Forms.Button();
+            this.btnTabella = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // txtLogLettore
@@ -61,9 +62,9 @@
             // 
             this.btnClose.BackColor = System.Drawing.Color.White;
             this.btnClose.Image = global::MicriCancelli.Properties.Resources.close_100;
-            this.btnClose.Location = new System.Drawing.Point(772, 312);
+            this.btnClose.Location = new System.Drawing.Point(844, 383);
             this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(101, 101);
+            this.btnClose.Size = new System.Drawing.Size(29, 30);
             this.btnClose.TabIndex = 10;
             this.toolTip1.SetToolTip(this.btnClose, "Setting");
             this.btnClose.UseVisualStyleBackColor = false;
@@ -116,11 +117,24 @@
             this.btnApri.UseVisualStyleBackColor = false;
             this.btnApri.Click += new System.EventHandler(this.btnApri_Click);
             // 
+            // btnTabella
+            // 
+            this.btnTabella.BackColor = System.Drawing.Color.White;
+            this.btnTabella.Image = global::MicriCancelli.Properties.Resources.table_100;
+            this.btnTabella.Location = new System.Drawing.Point(474, 312);
+            this.btnTabella.Name = "btnTabella";
+            this.btnTabella.Size = new System.Drawing.Size(101, 101);
+            this.btnTabella.TabIndex = 11;
+            this.toolTip1.SetToolTip(this.btnTabella, "Tabella Tutti i codici");
+            this.btnTabella.UseVisualStyleBackColor = false;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(885, 450);
+            this.ControlBox = false;
+            this.Controls.Add(this.btnTabella);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.btnSettings);
             this.Controls.Add(this.btnGeneraTicket);
@@ -148,6 +162,7 @@
         private System.Windows.Forms.Button btnGeneraTicket;
         private System.Windows.Forms.Button btnSettings;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Button btnTabella;
     }
 }
 

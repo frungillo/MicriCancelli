@@ -35,9 +35,10 @@ namespace MicriCancelli.Classi
             }
         }
 
-        public void ReadAllCodici()
+        public List<Codici> ReadAllCodici(string filter)
         {
-            string query = "SELECT * FROM codici";
+            string query = $"SELECT * FROM codici where {filter}";
+            List<Codici> list = new List<Codici>();
 
             using (SQLiteConnection connection = new SQLiteConnection(connectionString))
             using (SQLiteCommand command = new SQLiteCommand(query, connection))
@@ -47,17 +48,18 @@ namespace MicriCancelli.Classi
                 {
                     while (reader.Read())
                     {
-                        int idCodice = Convert.ToInt32(reader["id_codice"]);
-                        int codice = Convert.ToInt32(reader["codice"]);
-                        string dataEmissione = reader["data_emissione"].ToString();
-                        string oraEmissione = reader["ora_emissione"].ToString();
-                        string dataUso = reader["data_uso"].ToString();
-                        string oraUso = reader["ora_uso"].ToString();
-
-                        Console.WriteLine($"ID: {idCodice}, Codice: {codice}, Data Emissione: {dataEmissione}, Ora Emissione: {oraEmissione}, Data Uso: {dataUso}, Ora Uso: {oraUso}");
+                        Codici c=new Codici();
+                        c.Id_codice = Convert.ToInt32(reader["id_codice"]);
+                        c.Codice = Convert.ToInt32(reader["codice"]);
+                        c.Data_emissione = reader["data_emissione"].ToString();
+                        c.Ora_emissione = reader["ora_emissione"].ToString();
+                        c.Data_uso = reader["data_uso"].ToString();
+                        c.Ora_uso = reader["ora_uso"].ToString();
+                        list.Add(c);
                     }
                 }
             }
+            return list;
         }
 
         public void UpdateCodice(int idCodice, int codice, string dataEmissione, string oraEmissione, string dataUso = null, string oraUso = null)
