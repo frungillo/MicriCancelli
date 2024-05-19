@@ -35,7 +35,7 @@ namespace MicriCancelli.Classi
             }
         }
 
-        public List<Codici> ReadAllCodici(string filter)
+        public List<Codici> ReadAllCodici(string filter="1=1")
         {
             string query = $"SELECT * FROM codici where {filter}";
             List<Codici> list = new List<Codici>();

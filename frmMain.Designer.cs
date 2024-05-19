@@ -127,12 +127,13 @@
             this.btnTabella.TabIndex = 11;
             this.toolTip1.SetToolTip(this.btnTabella, "Tabella Tutti i codici");
             this.btnTabella.UseVisualStyleBackColor = false;
+            this.btnTabella.Click += new System.EventHandler(this.btnTabella_Click);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(885, 450);
+            this.ClientSize = new System.Drawing.Size(881, 446);
             this.ControlBox = false;
             this.Controls.Add(this.btnTabella);
             this.Controls.Add(this.btnClose);

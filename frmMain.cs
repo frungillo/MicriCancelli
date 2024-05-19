@@ -309,5 +309,11 @@ namespace MicriCancelli
             this.Close();
         }
 
+        private void btnTabella_Click(object sender, EventArgs e)
+        {
+            frmTabella frm = new frmTabella();
+            frm.StartPosition = FormStartPosition.CenterParent;
+            frm.ShowDialog(this);
+        }
     }
 }
