@@ -49,31 +49,32 @@ namespace MicriCancelli
         // parte dedicata all'autorecovery
         public delegate int RecoveryDelegate(IntPtr parameter);
 
-        [DllImport("kernel32.dll")]
-        private static extern int RegisterApplicationRecoveryCallback(
-                RecoveryDelegate recoveryCallback,
-                IntPtr parameter,
-                uint pingInterval,
-                uint flags);
+         [DllImport("kernel32.dll")]
+         private static extern int RegisterApplicationRecoveryCallback(
+                 RecoveryDelegate recoveryCallback,
+                 IntPtr parameter,
+                 uint pingInterval,
+                 uint flags);
 
-        [DllImport("kernel32.dll")]
-        private static extern void ApplicationRecoveryFinished(bool success);
+         [DllImport("kernel32.dll")]
+         private static extern void ApplicationRecoveryFinished(bool success);
 
-        private static void RegisterForRecovery()
-        {
-            var callback = new RecoveryDelegate(p =>
-            {
-                Process.Start(Assembly.GetEntryAssembly().Location);
-                ApplicationRecoveryFinished(true);
-                return 0;
-            });
+         private static void RegisterForRecovery()
+         {
+             var callback = new RecoveryDelegate(p =>
+             {
+                 Process.Start(Assembly.GetEntryAssembly().Location);
+                 ApplicationRecoveryFinished(true);
+                 return 0;
+             });
 
-            var interval = 100U;
-            var flags = 0U;
+             var interval = 100U;
+             var flags = 0U;
 
-            RegisterApplicationRecoveryCallback(callback, IntPtr.Zero, interval, flags);
-        }
-
+             RegisterApplicationRecoveryCallback(callback, IntPtr.Zero, interval, flags);
+         }
+        
+        // FINE PARTE AUTORECOVERY
         public frmMain()
         {
             RegisterForRecovery();
