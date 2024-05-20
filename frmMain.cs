@@ -17,16 +17,17 @@ using static log4net.Appender.RollingFileAppender;
 using System.Threading;
 using CrystalDecisions.CrystalReports.Engine;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 
 
 namespace MicriCancelli
 {
+    
     public partial class frmMain : Form
     {
         private const int WH_KEYBOARD_LL = 13;
         private const int WM_KEYDOWN = 0x0100;
-
 
         private IntPtr hookID = IntPtr.Zero;
         private LowLevelKeyboardProc keyboardProc;
@@ -41,25 +42,28 @@ namespace MicriCancelli
         private string ipArduino = "10.99.5.101";
         private int portaArduino = 80;
         private int inching = 1000;
+        private int secondiRefresh = 5;
+        private int countDown;
 
         // Inizializza un nuovo gestore SQLiteManager
-       
         string dbFilePath = MicriCancelli.Properties.Settings.Default.dbpathFile;
 
         // parte dedicata all'autorecovery
         public delegate int RecoveryDelegate(IntPtr parameter);
 
-         [DllImport("kernel32.dll")]
-         private static extern int RegisterApplicationRecoveryCallback(
+        [DllImport("kernel32.dll")]
+        private static extern int RegisterApplicationRecoveryCallback(
                  RecoveryDelegate recoveryCallback,
                  IntPtr parameter,
                  uint pingInterval,
                  uint flags);
 
-         [DllImport("kernel32.dll")]
-         private static extern void ApplicationRecoveryFinished(bool success);
-
-         private static void RegisterForRecovery()
+        [DllImport("kernel32.dll")]
+        private static extern void ApplicationRecoveryFinished(bool success);
+        
+        BindingSource bs_co = new BindingSource();
+        
+        private static void RegisterForRecovery()
          {
              var callback = new RecoveryDelegate(p =>
              {
@@ -78,7 +82,7 @@ namespace MicriCancelli
         public frmMain()
         {
             RegisterForRecovery();
-
+            this.Load += FrmMain_Load;
             InitializeComponent();
             keyboardProc = HookCallback;
             txtLogLettore.ScrollBars=ScrollBars.Vertical;
@@ -98,6 +102,18 @@ namespace MicriCancelli
             this.TopMost = true;
             
         }
+
+        private void FrmMain_Load(object sender, EventArgs e)
+        {
+            caricaCodici();
+            timerRefresh.Interval= secondiRefresh * 1000;
+            lblRefresh.Text = "AutoRefresh ogni " + secondiRefresh.ToString() + " secondi";
+            timerRefresh.Start();
+            timerCountDown.Start();
+            countDown = secondiRefresh;
+            lblRefresh.Text = "Prossimo refresh tra " + countDown.ToString() + " sec.";
+        }
+
         private void caricaParametri() 
         {
             Parametri par=new Parametri();
@@ -260,14 +276,11 @@ namespace MicriCancelli
             par = Parametri.GetParametro("inching");
             await Commons.ApreChiude(Convert.ToInt32(par.Value));
         }
-
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtLogLettore.Text = "";
             inputBuffer.Clear();
-           
         }
-
         private void GeneraTicket() {
             // genera e stampa un nuovo biglietto. Come string che poi memoorizzo come intero che non inizia con 0
             string codice;
@@ -290,13 +303,11 @@ namespace MicriCancelli
             rep.SetParameterValue(1, codice);
             rep.PrintToPrinter(1, false, 1, 1);
         }
-        
         private void btnGeneraTicket_Click(object sender, EventArgs e)
         {
            GeneraTicket();
 
         }
-
         private void btnSettings_Click(object sender, EventArgs e)
         {
             frmParametri frm = new frmParametri();
@@ -304,17 +315,54 @@ namespace MicriCancelli
             frm.ShowDialog(this);
             caricaParametri();
         }
-
         private void btnClose_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
         private void btnTabella_Click(object sender, EventArgs e)
         {
             frmTabella frm = new frmTabella();
             frm.StartPosition = FormStartPosition.CenterParent;
             frm.ShowDialog(this);
+        }
+        private void caricaCodici()
+        {
+
+            DataTable dt = new DataTable();
+            List<Codici> list = new List<Codici>();
+            list = Codici.getAll(" 1=1 order by data_emissione desc, ora_emissione desc");
+            dt = Commons.ToDataTable(list);
+            bs_co.DataSource = dt;
+            grigliaCodici.DataSource = bs_co;
+
+            grigliaCodici.Columns[1].Width = 70;
+            grigliaCodici.Columns[2].Width = 95;
+            grigliaCodici.Columns[3].Width = 70;
+            grigliaCodici.Columns[4].Width = 95;
+            grigliaCodici.Columns[5].Width = 70;
+
+            grigliaCodici.Columns[1].HeaderText = "CODICE";
+            grigliaCodici.Columns[2].HeaderText = "DATA EMISS.";
+            grigliaCodici.Columns[3].HeaderText = "ORA EMISS.";
+            grigliaCodici.Columns[4].HeaderText = "DATA USO";
+            grigliaCodici.Columns[5].HeaderText = "ORA USO";
+            grigliaCodici.Columns[0].Visible = false;
+
+            grigliaCodici.ClearSelection();
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            caricaCodici();
+        }
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            caricaCodici();
+        }
+        private void timerCountDown_Tick(object sender, EventArgs e)
+        {
+            countDown--;
+            lblRefresh.Text = "Prossimo refresh tra " + countDown.ToString() + " sec.";
+            if (countDown == 0) countDown = secondiRefresh;
         }
     }
 }

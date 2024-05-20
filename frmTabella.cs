@@ -38,7 +38,7 @@ namespace MicriCancelli
             grigliaCodici.Columns[2].Width = 100;
             grigliaCodici.Columns[3].Width = 70;
             grigliaCodici.Columns[4].Width = 100;
-            grigliaCodici.Columns[4].Width = 100;
+            grigliaCodici.Columns[5].Width = 70;
 
             grigliaCodici.Columns[1].HeaderText = "CODICE";
             grigliaCodici.Columns[2].HeaderText = "DATA EMISS.";

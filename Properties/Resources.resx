@@ -124,8 +124,11 @@
   <data name="table-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\table-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="save-30" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\save-30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="settings-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\settings-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="refresh-40" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\refresh-40.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="barcode-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\barcode-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -136,8 +139,8 @@
   <data name="closeBar" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\closeBar.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="settings-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\settings-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="save-30" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\save-30.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="closeBar1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\closeBar1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -145,7 +148,7 @@
   <data name="close-100" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\close-100.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="refresh-40" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\refresh-40.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="refresh-28" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\refresh-28.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
