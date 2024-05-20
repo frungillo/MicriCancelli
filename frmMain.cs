@@ -118,19 +118,19 @@ namespace MicriCancelli
         {
             Parametri par=new Parametri();
             par = Parametri.GetParametro("code_len");
-            code_len=Convert.ToInt32(par.Value);
+            if (par.Id_parametro != 0) code_len =Convert.ToInt32(par.Value);
             par = Parametri.GetParametro("KeyEnd");
-            keyEnd= (Keys)Enum.Parse(typeof(Keys), par.Value, true);
+            if (par.Id_parametro != 0) keyEnd = (Keys)Enum.Parse(typeof(Keys), par.Value, true);
             par = Parametri.GetParametro("minutiValidita");
-            minutiValidita=Convert.ToInt32(par.Value);
+            if (par.Id_parametro != 0) minutiValidita =Convert.ToInt32(par.Value);
             par = Parametri.GetParametro("ipArduino");
-            ipArduino=par.Value.ToString();
+            if (par.Id_parametro != 0) ipArduino =par.Value.ToString();
             par = Parametri.GetParametro("portaArduino");
-            portaArduino=Convert.ToInt32(par.Value);
+            if (par.Id_parametro != 0) portaArduino =Convert.ToInt32(par.Value);
             par = Parametri.GetParametro("inching");
-            inching=Convert.ToInt32(par.Value);
+            if (par.Id_parametro != 0) inching =Convert.ToInt32(par.Value);
             par = Parametri.GetParametro("secondiRefresh");
-            secondiRefresh=Convert.ToInt32(par.Value);
+            if (par.Id_parametro != 0) secondiRefresh =Convert.ToInt32(par.Value);
         }
         protected override void OnLoad(EventArgs e)
         {
