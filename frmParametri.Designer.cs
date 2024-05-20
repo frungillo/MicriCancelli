@@ -54,6 +54,9 @@
             this.label8 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btnClose = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.txtSecondiRefresh = new System.Windows.Forms.TextBox();
+            this.btnSalvaSecondiRefresh = new System.Windows.Forms.Button();
             this.grpParametri.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -229,6 +232,9 @@
             // 
             // grpParametri
             // 
+            this.grpParametri.Controls.Add(this.label9);
+            this.grpParametri.Controls.Add(this.txtSecondiRefresh);
+            this.grpParametri.Controls.Add(this.btnSalvaSecondiRefresh);
             this.grpParametri.Controls.Add(this.label6);
             this.grpParametri.Controls.Add(this.txtInching);
             this.grpParametri.Controls.Add(this.btnSalvaInching);
@@ -330,6 +336,38 @@
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(316, 78);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(86, 13);
+            this.label9.TabIndex = 20;
+            this.label9.Text = "Secondi Refresh";
+            // 
+            // txtSecondiRefresh
+            // 
+            this.txtSecondiRefresh.Enabled = false;
+            this.txtSecondiRefresh.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSecondiRefresh.Location = new System.Drawing.Point(448, 70);
+            this.txtSecondiRefresh.Name = "txtSecondiRefresh";
+            this.txtSecondiRefresh.Size = new System.Drawing.Size(100, 29);
+            this.txtSecondiRefresh.TabIndex = 21;
+            this.txtSecondiRefresh.Tag = "secondiRefresh";
+            this.toolTip1.SetToolTip(this.txtSecondiRefresh, "Intero, indica quanti millisecondi il relè resta eccitato");
+            // 
+            // btnSalvaSecondiRefresh
+            // 
+            this.btnSalvaSecondiRefresh.Enabled = false;
+            this.btnSalvaSecondiRefresh.Image = global::MicriCancelli.Properties.Resources.save_30;
+            this.btnSalvaSecondiRefresh.Location = new System.Drawing.Point(555, 69);
+            this.btnSalvaSecondiRefresh.Name = "btnSalvaSecondiRefresh";
+            this.btnSalvaSecondiRefresh.Size = new System.Drawing.Size(31, 31);
+            this.btnSalvaSecondiRefresh.TabIndex = 22;
+            this.btnSalvaSecondiRefresh.Tag = "secondiRefresh";
+            this.btnSalvaSecondiRefresh.UseVisualStyleBackColor = true;
+            this.btnSalvaSecondiRefresh.Click += new System.EventHandler(this.btnSalvaParametro_Click);
+            // 
             // frmParametri
             // 
             this.AcceptButton = this.btnSblocca;
@@ -381,5 +419,8 @@
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnClose;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.TextBox txtSecondiRefresh;
+        private System.Windows.Forms.Button btnSalvaSecondiRefresh;
     }
 }

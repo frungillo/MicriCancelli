@@ -129,6 +129,8 @@ namespace MicriCancelli
             portaArduino=Convert.ToInt32(par.Value);
             par = Parametri.GetParametro("inching");
             inching=Convert.ToInt32(par.Value);
+            par = Parametri.GetParametro("secondiRefresh");
+            secondiRefresh=Convert.ToInt32(par.Value);
         }
         protected override void OnLoad(EventArgs e)
         {
@@ -360,8 +362,9 @@ namespace MicriCancelli
         }
         private void timerCountDown_Tick(object sender, EventArgs e)
         {
-            countDown--;
+            
             lblRefresh.Text = "Prossimo refresh tra " + countDown.ToString() + " sec.";
+            countDown--;
             if (countDown == 0) countDown = secondiRefresh;
         }
     }

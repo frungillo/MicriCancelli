@@ -51,8 +51,6 @@ namespace MicriCancelli
             }
         }
 
-        
-
         private void btnSalvaParametro_Click(object sender, EventArgs e)
         {
             Button item = new Button();
@@ -80,7 +78,10 @@ namespace MicriCancelli
                 case "inching":
                     par.Value = txtInching.Text;
                     break;
-                    default:
+                case "cecondiRefresh":
+                    par.Value = txtSecondiRefresh.Text;
+                    break;
+                default:
                     return;
                     
             }
