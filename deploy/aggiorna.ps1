@@ -1,35 +1,57 @@
-# ============================================================
+﻿# ============================================================
 #  MicriCancelli - Installa o aggiorna dal PC del varco
 #
 #  Scarica l'ultima release da GitHub e la installa nella cartella indicata
 #  (predefinita: C:\MicriCancelli). Se il programma è in esecuzione lo chiude,
 #  sovrascrive i file, CONSERVA database (DB\) e log (logs\) e lo riavvia.
 #
+#  Il repository è privato: serve un token GitHub di SOLA LETTURA (fine-grained,
+#  permesso "Contents: read" sul solo repository MicriCancelli). Lo script lo
+#  cerca in quest'ordine: parametro -Token, variabile d'ambiente
+#  MICRI_GITHUB_TOKEN, file github-token.txt nella cartella del programma.
+#  Alla prima installazione lo salva in quel file, così gli aggiornamenti
+#  successivi non lo richiedono più.
+#
 #  Prima installazione (PowerShell, anche non amministratore):
-#     irm https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
+#     $env:MICRI_GITHUB_TOKEN = 'github_pat_...'
+#     irm -Headers @{Authorization="Bearer $env:MICRI_GITHUB_TOKEN"} https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
 #
 #  Aggiornamenti successivi: doppio clic su aggiorna.cmd nella cartella del
 #  programma, oppure:
 #     powershell -ExecutionPolicy Bypass -File C:\MicriCancelli\aggiorna.ps1
 #
-#  Parametri facoltativi:  -Cartella D:\Altro   -Versione 2.0.1   -NonAvviare
+#  Parametri facoltativi:  -Cartella D:\Altro   -Versione 2.0.1   -Token ...   -NonAvviare
 # ============================================================
 param(
     [string]$Cartella = "C:\MicriCancelli",
     [string]$Versione = "",          # vuoto = ultima release
+    [string]$Token = "",
     [switch]$NonAvviare
 )
 
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 $repo = "frungillo/MicriCancelli"
+$fileToken = Join-Path $Cartella 'github-token.txt'
 
 Write-Host ""
 Write-Host "=== MicriCancelli - installazione/aggiornamento ===" -ForegroundColor Cyan
 
+# ---- 0. token (repository privato) ----
+if (-not $Token) { $Token = $env:MICRI_GITHUB_TOKEN }
+if (-not $Token -and (Test-Path $fileToken)) { $Token = (Get-Content $fileToken -Raw).Trim() }
+$intestazioni = @{ 'User-Agent' = 'MicriCancelli-aggiorna'; 'Accept' = 'application/vnd.github+json' }
+if ($Token) { $intestazioni['Authorization'] = "Bearer $Token" }
+
 # ---- 1. individua la release ----
 $api = if ($Versione) { "https://api.github.com/repos/$repo/releases/tags/v$Versione" } else { "https://api.github.com/repos/$repo/releases/latest" }
-$release = Invoke-RestMethod -Uri $api -Headers @{ 'User-Agent' = 'MicriCancelli-aggiorna' }
+try {
+    $release = Invoke-RestMethod -Uri $api -Headers $intestazioni
+}
+catch {
+    if (-not $Token) { throw "GitHub ha rifiutato la richiesta e non c'è nessun token: il repository è privato, serve il token di sola lettura (vedi intestazione dello script)." }
+    throw "GitHub ha rifiutato la richiesta ($($_.Exception.Message)): token scaduto o senza permesso 'Contents: read' su $repo ?"
+}
 $asset = $release.assets | Where-Object { $_.name -like 'MicriCancelli-v*.zip' } | Select-Object -First 1
 if (-not $asset) { throw "La release $($release.tag_name) non contiene lo zip del programma." }
 $nuova = $release.tag_name.TrimStart('v')
@@ -43,14 +65,39 @@ if ($attuale -eq $nuova -and -not $Versione) {
 }
 
 # ---- 2. scarica ----
+# Per i repository privati l'asset va richiesto all'API con Accept: application/octet-stream:
+# GitHub risponde con un redirect a un indirizzo firmato, da seguire SENZA l'intestazione Authorization.
+function Scarica-Asset([string]$url, [string]$destinazione) {
+    $richiesta = [System.Net.HttpWebRequest]::Create($url)
+    $richiesta.UserAgent = 'MicriCancelli-aggiorna'
+    $richiesta.Accept = 'application/octet-stream'
+    $richiesta.AllowAutoRedirect = $false
+    if ($Token) { $richiesta.Headers['Authorization'] = "Bearer $Token" }
+    $risposta = $richiesta.GetResponse()
+    try {
+        $codice = [int]$risposta.StatusCode
+        if ($codice -ge 300 -and $codice -lt 400) {
+            $dove = $risposta.Headers['Location']
+            $risposta.Close()
+            Invoke-WebRequest -Uri $dove -OutFile $destinazione -Headers @{ 'User-Agent' = 'MicriCancelli-aggiorna' }
+            return
+        }
+        $flusso = $risposta.GetResponseStream()
+        $file = [System.IO.File]::Create($destinazione)
+        try { $flusso.CopyTo($file) } finally { $file.Close(); $flusso.Close() }
+    }
+    finally { $risposta.Close() }
+}
+
 $tmp = Join-Path $env:TEMP "MicriCancelli-v$nuova"
 if (Test-Path $tmp) { Remove-Item $tmp -Recurse -Force }
 New-Item -ItemType Directory -Force $tmp | Out-Null
 $zip = Join-Path $tmp $asset.name
 Write-Host "  Scarico $($asset.name) ($([math]::Round($asset.size / 1MB, 1)) MB)..."
-Invoke-WebRequest -Uri $asset.browser_download_url -OutFile $zip -Headers @{ 'User-Agent' = 'MicriCancelli-aggiorna' }
+Scarica-Asset $asset.url $zip
 Expand-Archive -Path $zip -DestinationPath (Join-Path $tmp 'estratto') -Force
 $sorgente = Join-Path $tmp 'estratto'
+if (-not (Test-Path (Join-Path $sorgente 'MicriCancelli.exe'))) { throw "Lo zip scaricato non contiene MicriCancelli.exe" }
 
 # ---- 3. chiude il programma se è aperto ----
 $processi = Get-Process -Name 'MicriCancelli' -ErrorAction SilentlyContinue
@@ -76,6 +123,8 @@ Get-ChildItem $sorgente -Force | ForEach-Object {
 if (-not (Test-Path (Join-Path $Cartella 'DB\cancelli.db'))) {
     Copy-Item (Join-Path $sorgente 'DB') (Join-Path $Cartella 'DB') -Recurse -Force
 }
+# il token resta sul PC per gli aggiornamenti successivi (solo lettura del repository)
+if ($Token) { Set-Content $fileToken $Token -Encoding ASCII -NoNewline }
 
 # comodità: un .cmd per aggiornare con doppio clic e un collegamento sul desktop
 Set-Content (Join-Path $Cartella 'aggiorna.cmd') "@echo off`r`npowershell -NoProfile -ExecutionPolicy Bypass -File `"%~dp0aggiorna.ps1`"`r`npause" -Encoding ASCII

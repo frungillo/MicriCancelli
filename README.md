@@ -49,25 +49,35 @@ script `aggiorna.ps1`.
 **Creare una release** (macchina di sviluppo, GitHub CLI autenticata):
 
 ```bash
-powershell -ExecutionPolicy Bypass -File .\deployelease.ps1 -Versione 2.0.1 -Note "Cosa cambia"
+powershell -ExecutionPolicy Bypass -File .\deploy
+elease.ps1 -Versione 2.0.1 -Note "Cosa cambia"
 ```
 
 Compila in Release con quel numero di versione (che compare nel titolo della finestra), crea lo zip in
 `pubblicazione\` e pubblica tag e release su GitHub.
 
+**Token di accesso.** Il repository è privato, quindi il PC del varco ha bisogno di un token GitHub di
+sola lettura. Si crea una volta da GitHub → Settings → Developer settings → Fine-grained tokens:
+repository `frungillo/MicriCancelli` soltanto, permesso **Contents: Read-only**, scadenza lunga (es. 1 anno).
+Lo script lo salva in `C:\MicriCancelli\github-token.txt` e da lì lo riusa per gli aggiornamenti.
+Se il repository dovesse diventare pubblico, il token non serve più e la procedura resta la stessa.
+
 **Installare sul PC del varco la prima volta** (PowerShell, non serve essere amministratore):
 
-```bash
-irm https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
+```powershell
+$env:MICRI_GITHUB_TOKEN = 'github_pat_...'
+irm -Headers @{Authorization="Bearer $env:MICRI_GITHUB_TOKEN"} https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
 ```
 
 Installa in `C:\MicriCancelli`, crea il collegamento sul desktop e avvia il programma. Poi, dal
 pannello Parametri: stampante, IP dell'Arduino e chiave della piattaforma.
 
-**Aggiornare**: doppio clic su `aggiorna.cmd` nella cartella del programma (o rilanciare la riga sopra).
-Lo script confronta la versione installata con l'ultima release, scarica lo zip, chiude il programma,
-sovrascrive i file **senza toccare `DB\` e `logs\`** e lo riavvia. Con `-Versione 2.0.0` installa
-una versione precisa (anche per tornare indietro).
+**Aggiornare**: doppio clic su `aggiorna.cmd` nella cartella del programma. Lo script confronta la
+versione installata con l'ultima release, scarica lo zip, chiude il programma, sovrascrive i file
+**senza toccare `DB\` e `logs\`** e lo riavvia. Con `-Versione 2.0.0` installa una versione precisa
+(anche per tornare indietro). In alternativa, da un PC con accesso a GitHub, si scarica lo zip dalla
+pagina della release e lo si porta sul PC del varco (anche in sessione remota): estrarlo sopra la
+cartella del programma lasciando `DB\` e `logs\`.
 
 ## Biglietto e scanner
 

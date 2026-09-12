@@ -1,4 +1,4 @@
-# ============================================================
+﻿# ============================================================
 #  MicriCancelli - Crea una release su GitHub
 #
 #  Uso (dalla macchina di sviluppo, con GitHub CLI autenticata):
