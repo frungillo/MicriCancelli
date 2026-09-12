@@ -113,6 +113,13 @@ namespace MicriCancelli.Properties {
         /// <summary>
         ///   Cerca una risorsa localizzata di tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap logo_micri {
+            get {
+                object obj = ResourceManager.GetObject("logo-micri", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap openBar {
             get {
                 object obj = ResourceManager.GetObject("openBar", resourceCulture);

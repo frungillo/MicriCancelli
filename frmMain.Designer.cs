@@ -29,14 +29,11 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             this.txtLogLettore = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.grigliaCodici = new System.Windows.Forms.DataGridView();
-            this.timerRefresh = new System.Windows.Forms.Timer(this.components);
-            this.lblRefresh = new System.Windows.Forms.Label();
             this.btnRefresh = new System.Windows.Forms.Button();
             this.btnTabella = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
@@ -44,6 +41,9 @@
             this.btnGeneraTicket = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnApri = new System.Windows.Forms.Button();
+            this.grigliaCodici = new System.Windows.Forms.DataGridView();
+            this.timerRefresh = new System.Windows.Forms.Timer(this.components);
+            this.lblRefresh = new System.Windows.Forms.Label();
             this.timerCountDown = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.grigliaCodici)).BeginInit();
             this.SuspendLayout();
@@ -65,46 +65,6 @@
             this.label1.Size = new System.Drawing.Size(100, 13);
             this.label1.TabIndex = 4;
             this.label1.Text = "Operazioni di lettura";
-            // 
-            // grigliaCodici
-            // 
-            this.grigliaCodici.AllowUserToAddRows = false;
-            this.grigliaCodici.AllowUserToDeleteRows = false;
-            this.grigliaCodici.AllowUserToResizeColumns = false;
-            this.grigliaCodici.AllowUserToResizeRows = false;
-            dataGridViewCellStyle7.ForeColor = System.Drawing.Color.Red;
-            this.grigliaCodici.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle7;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.grigliaCodici.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
-            this.grigliaCodici.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grigliaCodici.Enabled = false;
-            this.grigliaCodici.Location = new System.Drawing.Point(445, 36);
-            this.grigliaCodici.MultiSelect = false;
-            this.grigliaCodici.Name = "grigliaCodici";
-            this.grigliaCodici.ReadOnly = true;
-            this.grigliaCodici.RowHeadersVisible = false;
-            this.grigliaCodici.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.grigliaCodici.Size = new System.Drawing.Size(405, 459);
-            this.grigliaCodici.TabIndex = 12;
-            // 
-            // timerRefresh
-            // 
-            this.timerRefresh.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // lblRefresh
-            // 
-            this.lblRefresh.AutoSize = true;
-            this.lblRefresh.Location = new System.Drawing.Point(494, 15);
-            this.lblRefresh.Name = "lblRefresh";
-            this.lblRefresh.Size = new System.Drawing.Size(35, 13);
-            this.lblRefresh.TabIndex = 13;
-            this.lblRefresh.Text = "label2";
             // 
             // btnRefresh
             // 
@@ -137,7 +97,7 @@
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(29, 30);
             this.btnClose.TabIndex = 10;
-            this.toolTip1.SetToolTip(this.btnClose, "Setting");
+            this.toolTip1.SetToolTip(this.btnClose, "Chiudi");
             this.btnClose.UseVisualStyleBackColor = false;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
@@ -149,7 +109,7 @@
             this.btnSettings.Name = "btnSettings";
             this.btnSettings.Size = new System.Drawing.Size(101, 101);
             this.btnSettings.TabIndex = 9;
-            this.toolTip1.SetToolTip(this.btnSettings, "Setting");
+            this.toolTip1.SetToolTip(this.btnSettings, "Parametri");
             this.btnSettings.UseVisualStyleBackColor = false;
             this.btnSettings.Click += new System.EventHandler(this.btnSettings_Click);
             // 
@@ -161,7 +121,7 @@
             this.btnGeneraTicket.Name = "btnGeneraTicket";
             this.btnGeneraTicket.Size = new System.Drawing.Size(101, 101);
             this.btnGeneraTicket.TabIndex = 8;
-            this.toolTip1.SetToolTip(this.btnGeneraTicket, "Genera e Stampa Biglietto");
+            this.toolTip1.SetToolTip(this.btnGeneraTicket, "Genera e stampa un nuovo biglietto");
             this.btnGeneraTicket.UseVisualStyleBackColor = false;
             this.btnGeneraTicket.Click += new System.EventHandler(this.btnGeneraTicket_Click);
             // 
@@ -188,6 +148,46 @@
             this.btnApri.UseVisualStyleBackColor = false;
             this.btnApri.Click += new System.EventHandler(this.btnApri_Click);
             // 
+            // grigliaCodici
+            // 
+            this.grigliaCodici.AllowUserToAddRows = false;
+            this.grigliaCodici.AllowUserToDeleteRows = false;
+            this.grigliaCodici.AllowUserToResizeColumns = false;
+            this.grigliaCodici.AllowUserToResizeRows = false;
+            dataGridViewCellStyle3.ForeColor = System.Drawing.Color.Red;
+            this.grigliaCodici.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.grigliaCodici.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.grigliaCodici.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.grigliaCodici.Enabled = false;
+            this.grigliaCodici.Location = new System.Drawing.Point(445, 36);
+            this.grigliaCodici.MultiSelect = false;
+            this.grigliaCodici.Name = "grigliaCodici";
+            this.grigliaCodici.ReadOnly = true;
+            this.grigliaCodici.RowHeadersVisible = false;
+            this.grigliaCodici.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.grigliaCodici.Size = new System.Drawing.Size(405, 459);
+            this.grigliaCodici.TabIndex = 12;
+            // 
+            // timerRefresh
+            // 
+            this.timerRefresh.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
+            // lblRefresh
+            // 
+            this.lblRefresh.AutoSize = true;
+            this.lblRefresh.Location = new System.Drawing.Point(494, 15);
+            this.lblRefresh.Name = "lblRefresh";
+            this.lblRefresh.Size = new System.Drawing.Size(35, 13);
+            this.lblRefresh.TabIndex = 13;
+            this.lblRefresh.Text = "label2";
+            // 
             // timerCountDown
             // 
             this.timerCountDown.Interval = 1000;
@@ -197,7 +197,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(904, 507);
+            this.ClientSize = new System.Drawing.Size(900, 503);
             this.ControlBox = false;
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.lblRefresh);

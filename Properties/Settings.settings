@@ -1,9 +1,12 @@
-﻿<?xml version='1.0' encoding='utf-8'?>
+<?xml version='1.0' encoding='utf-8'?>
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="MicriCancelli.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="dbpathFile" Type="System.String" Scope="Application">
       <Value Profile="(Default)">.\DB\cancelli.db</Value>
+    </Setting>
+    <Setting Name="passwordParametriSha256" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">c1f30d9b4f5250aa9f4cacb54abd3affd3f9f20db48844e364cdd5d2896bf552</Value>
     </Setting>
   </Settings>
 </SettingsFile>
