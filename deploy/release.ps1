@@ -49,7 +49,10 @@ foreach ($f in @('MicriCancelli.exe', 'System.Data.SQLite.dll', 'x64\SQLite.Inte
 }
 
 Write-Host "[2/3] Creazione zip..." -ForegroundColor Yellow
-Compress-Archive -Path (Join-Path $uscita '*') -DestinationPath $zip -CompressionLevel Optimal
+# ZipFile di .NET e non Compress-Archive: quest'ultimo, in PowerShell 5.1, scrive i percorsi con la
+# barra rovesciata e alcuni programmi di estrazione (unzip, macOS) creano file con nomi sbagliati.
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::CreateFromDirectory($uscita, $zip, [System.IO.Compression.CompressionLevel]::Optimal, $false)
 $dimensione = [math]::Round((Get-Item $zip).Length / 1MB, 1)
 Write-Host "      $zip ($dimensione MB)"
 
@@ -80,4 +83,4 @@ finally { Pop-Location }
 Write-Host ""
 Write-Host "=== Release v$Versione pubblicata ===" -ForegroundColor Green
 Write-Host "  https://github.com/frungillo/MicriCancelli/releases/tag/v$Versione"
-Write-Host "  Sul PC del varco: .\aggiorna.ps1  (oppure la riga unica indicata nel README)"
+Write-Host "  Sul PC del varco: doppio clic su aggiorna.cmd (prima installazione: zip dalla pagina della release, vedi README)"
