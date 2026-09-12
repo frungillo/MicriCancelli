@@ -63,7 +63,8 @@ if ([string]::IsNullOrWhiteSpace($Note)) { $Note = "Release v$Versione di MicriC
 $Note += "`n`nInstallazione/aggiornamento sul PC del varco: vedi README (sezione Distribuzione)."
 Push-Location $radice
 try {
-    gh release view "v$Versione" *> $null
+    # (via cmd: in PowerShell 5.1 lo stderr di gh diventerebbe un errore bloccante)
+    cmd /c "gh release view v$Versione >nul 2>&1"
     if ($LASTEXITCODE -eq 0) {
         Write-Host "      la release v$Versione esiste: sostituisco lo zip allegato" -ForegroundColor Yellow
         gh release upload "v$Versione" $zip --clobber
