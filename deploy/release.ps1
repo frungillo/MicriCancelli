@@ -41,6 +41,7 @@ Remove-Item (Join-Path $uscita 'logs')  -Recurse -Force -ErrorAction SilentlyCon
 
 # Lo script di aggiornamento viaggia dentro il pacchetto: sul PC del varco resta accanto all'exe
 Copy-Item (Join-Path $PSScriptRoot 'aggiorna.ps1') $uscita -Force
+Copy-Item (Join-Path $PSScriptRoot 'aggiorna.cmd') $uscita -Force
 Set-Content (Join-Path $uscita 'VERSIONE.txt') $Versione -Encoding ASCII
 
 # Controllo: senza le librerie native di SQLite il programma non parte sul PC del cliente
