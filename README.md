@@ -56,23 +56,30 @@ elease.ps1 -Versione 2.0.1 -Note "Cosa cambia"
 Compila in Release con quel numero di versione (che compare nel titolo della finestra), crea lo zip in
 `pubblicazione\` e pubblica tag e release su GitHub.
 
-**Installare sul PC del varco la prima volta** (PowerShell, non serve essere amministratore):
+**Installare sul PC del varco la prima volta** (nessuna riga da incollare in PowerShell: le righe
+"scarica ed esegui" del tipo `irm ... | iex` vengono bloccate da Microsoft Defender come tecnica
+"ClickFix", ed è giusto così):
 
-```powershell
-irm https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
-```
+1. dal browser aprire <https://github.com/frungillo/MicriCancelli/releases/latest> e scaricare
+   `MicriCancelli-vX.Y.Z.zip`;
+2. tasto destro sullo zip → Proprietà → spuntare **Annulla blocco** → OK (toglie il "marchio del web"
+   ai file, così Windows non chiede conferme a ogni avvio); poi Estrai tutto in `C:\MicriCancelli`;
+3. avviare `C:\MicriCancelli\MicriCancelli.exe`. Se compare SmartScreen ("PC protetto da Windows"):
+   Ulteriori informazioni → Esegui comunque (solo la prima volta: l'eseguibile non è firmato);
+4. creare il collegamento sul desktop e, per l'avvio automatico, copiarlo in `shell:startup`.
 
-Installa in `C:\MicriCancelli`, crea il collegamento sul desktop e avvia il programma. Poi, dal
-pannello Parametri: cambiare subito la password del pannello, poi stampante, IP dell'Arduino e
-chiave della piattaforma. (Il repository è pubblico: non serve alcun token. Lo script accetta comunque
-`-Token` se un giorno tornasse privato.)
+Poi, dal pannello Parametri: cambiare subito la password del pannello, poi stampante, IP dell'Arduino e
+chiave della piattaforma.
 
-**Aggiornare**: doppio clic su `aggiorna.cmd` nella cartella del programma. Lo script confronta la
-versione installata con l'ultima release, scarica lo zip, chiude il programma, sovrascrive i file
-**senza toccare `DB\` e `logs\`** e lo riavvia. Con `-Versione 2.0.0` installa una versione precisa
-(anche per tornare indietro). In alternativa, da un PC con accesso a GitHub, si scarica lo zip dalla
-pagina della release e lo si porta sul PC del varco (anche in sessione remota): estrarlo sopra la
-cartella del programma lasciando `DB\` e `logs\`.
+**Aggiornare**: doppio clic su `aggiorna.cmd` nella cartella del programma (è uno script locale,
+`aggiorna.ps1`, arrivato con lo zip: Defender non lo considera ClickFix). Confronta la versione
+installata con l'ultima release, scarica lo zip, chiude il programma, sovrascrive i file **senza
+toccare `DB\` e `logs\`**, toglie il marchio del web ai file nuovi e riavvia. Da PowerShell accetta
+`-Versione 2.0.0` per installare una versione precisa (anche per tornare indietro). In alternativa si
+ripete a mano la procedura dello zip estraendolo sopra la cartella, lasciando `DB\` e `logs\`.
+
+Nota: l'eseguibile non è firmato digitalmente, quindi SmartScreen può avvisare al primo avvio di una
+versione nuova. Se diventa fastidioso, la soluzione definitiva è un certificato di firma del codice.
 
 ## Biglietto e scanner
 

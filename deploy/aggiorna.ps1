@@ -5,8 +5,9 @@
 #  (predefinita: C:\MicriCancelli). Se il programma è in esecuzione lo chiude,
 #  sovrascrive i file, CONSERVA database (DB\) e log (logs\) e lo riavvia.
 #
-#  Prima installazione (PowerShell, anche non amministratore):
-#     irm https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
+#  Prima installazione: scaricare lo zip dalla pagina delle release, "Annulla blocco"
+#  nelle proprietà dello zip, estrarre in C:\MicriCancelli, avviare MicriCancelli.exe.
+#  (Niente righe "irm ... | iex": Microsoft Defender le blocca come tecnica ClickFix.)
 #
 #  Il repository è pubblico: non serve nessun token. Se dovesse tornare privato,
 #  lo script accetta un token GitHub di sola lettura (-Token, variabile d'ambiente
@@ -121,6 +122,9 @@ if (-not (Test-Path (Join-Path $Cartella 'DB\cancelli.db'))) {
 }
 # il token resta sul PC per gli aggiornamenti successivi (solo lettura del repository)
 if ($Token) { Set-Content $fileToken $Token -Encoding ASCII -NoNewline }
+
+# toglie il "marchio del web" ai file appena copiati: niente avvisi di Windows a ogni avvio
+Get-ChildItem $Cartella -Recurse -File | Unblock-File -ErrorAction SilentlyContinue
 
 # comodità: un .cmd per aggiornare con doppio clic e un collegamento sul desktop
 Set-Content (Join-Path $Cartella 'aggiorna.cmd') "@echo off`r`npowershell -NoProfile -ExecutionPolicy Bypass -File `"%~dp0aggiorna.ps1`"`r`npause" -Encoding ASCII
