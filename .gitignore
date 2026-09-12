@@ -399,3 +399,6 @@ FodyWeavers.xsd
 
 # Log applicazione
 logs/
+
+# Pacchetti di release (deploy/release.ps1)
+pubblicazione/

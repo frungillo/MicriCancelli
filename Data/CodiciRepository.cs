@@ -61,6 +61,32 @@ namespace MicriCancelli.Data
             return lista;
         }
 
+        /// <summary>Elimina i codici emessi prima della data indicata. Restituisce quante righe ha tolto.</summary>
+        public int EliminaEmessiPrimaDi(DateTime limite)
+        {
+            using (var conn = _db.Apri())
+            using (var cmd = new SQLiteCommand("DELETE FROM codici WHERE emesso_il < @l", conn))
+            {
+                cmd.Parameters.AddWithValue("@l", Database.FormattaData(limite));
+                return cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int Conta()
+        {
+            using (var conn = _db.Apri())
+            using (var cmd = new SQLiteCommand("SELECT COUNT(*) FROM codici", conn))
+                return Convert.ToInt32(cmd.ExecuteScalar());
+        }
+
+        /// <summary>Restituisce al sistema lo spazio dei record cancellati (VACUUM: va eseguito fuori da transazioni).</summary>
+        public void Compatta()
+        {
+            using (var conn = _db.Apri())
+            using (var cmd = new SQLiteCommand("VACUUM", conn))
+                cmd.ExecuteNonQuery();
+        }
+
         private static Codice Mappa(SQLiteDataReader r) => new Codice
         {
             Id = Convert.ToInt32(r["id_codice"]),

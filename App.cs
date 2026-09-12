@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Threading;
 using MicriCancelli.Data;
 using MicriCancelli.Services;
 
@@ -16,6 +17,8 @@ namespace MicriCancelli
         public static GestoreAccessi Accessi { get; private set; }
         public static StampaBiglietto Stampa { get; private set; }
         public static ComandiRemoti Remoti { get; private set; }
+        public static PuliziaCodici Pulizia { get; private set; }
+        private static Timer _timerPulizia;
 
         public static void Inizializza()
         {
@@ -38,6 +41,12 @@ namespace MicriCancelli
             Accessi = new GestoreAccessi(Codici, Impostazioni, Cancello);
             Stampa = new StampaBiglietto(Impostazioni);
             Remoti = new ComandiRemoti(Impostazioni, Cancello);
+
+            // I codici scaduti da tempo non servono più: si cancellano subito e poi ogni ora,
+            // così la tabella resta piccola e i numeri a 6 cifre si riusano senza esaurirsi.
+            Pulizia = new PuliziaCodici(Codici, Impostazioni);
+            Pulizia.Esegui(compatta: Db.MigrazioneEseguita);
+            _timerPulizia = new Timer(_ => Pulizia.Esegui(compatta: false), null, TimeSpan.FromHours(1), TimeSpan.FromHours(1));
         }
 
         public static void RicaricaImpostazioni()

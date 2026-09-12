@@ -19,6 +19,7 @@ namespace MicriCancelli.Services
         public Keys TastoFine { get; private set; } = Keys.E;
         public int MinutiValidita { get; private set; } = 30;
         public int SecondiGrazia { get; private set; } = 60;
+        public int GiorniConservazione { get; private set; } = 30;
         public string IpArduino { get; private set; } = "10.99.5.101";
         public int PortaArduino { get; private set; } = 80;
         public int InchingMs { get; private set; } = 1000;
@@ -61,6 +62,9 @@ namespace MicriCancelli.Services
                 Descrizione = "Entro quanti minuti dall'emissione il biglietto può essere usato.", Valida = v => Intero(v, 1, 1440) },
             new Definizione { Chiave = "secondiGrazia", Etichetta = "Secondi di grazia dopo l'uso", Predefinito = "60",
                 Descrizione = "Per quanti secondi una seconda lettura dello stesso biglietto riapre ancora il cancello.", Valida = v => Intero(v, 0, 600) },
+            new Definizione { Chiave = "giorniConservazione", Etichetta = "Giorni di conservazione codici", Predefinito = "30",
+                Descrizione = "I codici emessi da più di questi giorni vengono cancellati (all'avvio e ogni ora) e i numeri tornano disponibili. Un biglietto vale pochi minuti: 30 giorni bastano per le verifiche.",
+                Valida = v => Intero(v, 1, 3650) },
             new Definizione { Chiave = "ipArduino", Etichetta = "Indirizzo IP Arduino", Predefinito = "10.99.5.101",
                 Descrizione = "IP della scheda che comanda il cancello.",
                 Valida = v => { IPAddress ip; return IPAddress.TryParse((v ?? "").Trim(), out ip) ? null : "Indirizzo IP non valido"; } },
@@ -98,6 +102,7 @@ namespace MicriCancelli.Services
             LunghezzaCodice = LeggiIntero(repo, "code_len", LunghezzaCodice);
             MinutiValidita = LeggiIntero(repo, "minutiValidita", MinutiValidita);
             SecondiGrazia = LeggiIntero(repo, "secondiGrazia", SecondiGrazia);
+            GiorniConservazione = LeggiIntero(repo, "giorniConservazione", GiorniConservazione);
             PortaArduino = LeggiIntero(repo, "portaArduino", PortaArduino);
             InchingMs = LeggiIntero(repo, "inching", InchingMs);
             TimeoutArduinoMs = LeggiIntero(repo, "timeoutArduino", TimeoutArduinoMs);

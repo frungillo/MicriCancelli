@@ -31,8 +31,43 @@ codici    (id_codice, codice UNIQUE, emesso_il, usato_il NULL, tipo)
 parametri (id_parametro, key UNIQUE, value)
 ```
 
-Al primo avvio su un DB vecchio la migrazione rinomina la tabella originale in `codici_legacy`,
-converte le righe leggibili e lascia le altre solo nella tabella legacy. Nulla viene cancellato.
+Al primo avvio su un DB vecchio la migrazione converte i codici degli ultimi 30 giorni ed elimina la
+tabella originale: dopo anni di esercizio conteneva centinaia di migliaia di biglietti scaduti da tempo
+(prova con 200.000 righe: 1,5 secondi, file da 11 MB a 0,8 MB).
+
+**Pulizia periodica.** I codici sono a 6 cifre (900.000 numeri): senza pulizia, a qualche centinaio di
+emissioni al giorno, la tabella crescerebbe fino a rendere frequenti le collisioni e poi a esaurire i numeri.
+Il parametro `giorniConservazione` (default 30) fa cancellare, all'avvio e poi ogni ora, i codici emessi
+oltre quella soglia: la tabella resta a poche migliaia di righe e i numeri tornano riutilizzabili.
+
+## Distribuzione e aggiornamento
+
+Le release stanno su GitHub: <https://github.com/frungillo/MicriCancelli/releases>. Ogni release ha
+allegato `MicriCancelli-vX.Y.Z.zip` con il programma, un DB vuoto per le installazioni nuove e lo
+script `aggiorna.ps1`.
+
+**Creare una release** (macchina di sviluppo, GitHub CLI autenticata):
+
+```bash
+powershell -ExecutionPolicy Bypass -File .\deployelease.ps1 -Versione 2.0.1 -Note "Cosa cambia"
+```
+
+Compila in Release con quel numero di versione (che compare nel titolo della finestra), crea lo zip in
+`pubblicazione\` e pubblica tag e release su GitHub.
+
+**Installare sul PC del varco la prima volta** (PowerShell, non serve essere amministratore):
+
+```bash
+irm https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
+```
+
+Installa in `C:\MicriCancelli`, crea il collegamento sul desktop e avvia il programma. Poi, dal
+pannello Parametri: stampante, IP dell'Arduino e chiave della piattaforma.
+
+**Aggiornare**: doppio clic su `aggiorna.cmd` nella cartella del programma (o rilanciare la riga sopra).
+Lo script confronta la versione installata con l'ultima release, scarica lo zip, chiude il programma,
+sovrascrive i file **senza toccare `DB\` e `logs\`** e lo riavvia. Con `-Versione 2.0.0` installa
+una versione precisa (anche per tornare indietro).
 
 ## Biglietto e scanner
 

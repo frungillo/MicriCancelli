@@ -17,12 +17,18 @@ namespace MicriCancelli.Data
         private const int VersioneSchema = 2;
 
         private readonly string _connectionString;
+        private readonly int _giorniLegacyDaCopiare;
 
         public string Percorso { get; }
 
-        public Database(string percorso)
+        /// <summary>True se in questo avvio lo schema è stato migrato (dopo conviene compattare il file).</summary>
+        public bool MigrazioneEseguita { get; private set; }
+
+        /// <param name="giorniLegacyDaCopiare">Nella migrazione dal vecchio schema si copiano solo i codici emessi in questi ultimi giorni: i più vecchi sono scaduti da tempo.</param>
+        public Database(string percorso, int giorniLegacyDaCopiare = 30)
         {
             Percorso = percorso;
+            _giorniLegacyDaCopiare = giorniLegacyDaCopiare;
             _connectionString = new SQLiteConnectionStringBuilder
             {
                 DataSource = percorso,
@@ -67,6 +73,7 @@ namespace MicriCancelli.Data
                     Esegui(conn, "PRAGMA user_version = " + VersioneSchema);
                     tx.Commit();
                 }
+                MigrazioneEseguita = true;
                 Log.Info("Schema DB portato alla versione " + VersioneSchema);
             }
         }
@@ -99,12 +106,14 @@ namespace MicriCancelli.Data
         }
 
         /// <summary>
-        /// Converte le righe legacy. Le righe con date non interpretabili restano solo in codici_legacy
-        /// (la tabella non viene eliminata, così nulla va perso).
+        /// Converte le righe legacy recenti (ultimi <see cref="_giorniLegacyDaCopiare"/> giorni) e poi elimina la
+        /// tabella legacy: un biglietto vale pochi minuti, lo storico più vecchio è solo peso (centinaia di
+        /// migliaia di righe dopo anni di esercizio). Le righe non interpretabili vengono scartate e loggate.
         /// </summary>
         private void CopiaCodiciLegacy(SQLiteConnection conn)
         {
-            int copiate = 0, scartate = 0;
+            int copiate = 0, scartate = 0, vecchie = 0;
+            var limite = DateTime.Now.AddDays(-_giorniLegacyDaCopiare);
             var righe = new List<object[]>();
             using (var cmd = new SQLiteCommand("SELECT codice, data_emissione, ora_emissione, data_uso, ora_uso FROM codici_legacy ORDER BY id_codice", conn))
             using (var r = cmd.ExecuteReader())
@@ -119,9 +128,10 @@ namespace MicriCancelli.Data
                     !ProvaLeggiDataLegacy(Convert.ToString(riga[1]), Convert.ToString(riga[2]), out emesso))
                 {
                     scartate++;
-                    Log.Info("Migrazione: riga legacy non convertibile, resta in codici_legacy: " + string.Join(" | ", riga));
+                    Log.Info("Migrazione: riga legacy non convertibile, scartata: " + string.Join(" | ", riga));
                     continue;
                 }
+                if (emesso < limite) { vecchie++; continue; }
                 DateTime usato;
                 var usatoIl = ProvaLeggiDataLegacy(Convert.ToString(riga[3]), Convert.ToString(riga[4]), out usato) ? (DateTime?)usato : null;
 
@@ -133,7 +143,9 @@ namespace MicriCancelli.Data
                     copiate += ins.ExecuteNonQuery();
                 }
             }
-            Log.Info("Migrazione codici legacy: " + copiate + " copiate, " + scartate + " scartate");
+            Esegui(conn, "DROP TABLE codici_legacy");
+            Log.Info("Migrazione codici legacy: " + copiate + " copiate (ultimi " + _giorniLegacyDaCopiare + " giorni), " +
+                     vecchie + " più vecchie non copiate, " + scartate + " non interpretabili; tabella legacy eliminata");
         }
 
         private static readonly string[] FormatiLegacy =

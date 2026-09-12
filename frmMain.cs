@@ -19,6 +19,7 @@ namespace MicriCancelli
             RegisterForRecovery();
             InitializeComponent();
             txtLogLettore.ScrollBars = ScrollBars.Vertical;
+            this.Text += "  v" + Application.ProductVersion;
             this.TopMost = true;
 
             Log.Scritto += SuLogScritto;
