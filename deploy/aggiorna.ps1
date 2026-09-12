@@ -29,6 +29,12 @@ param(
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 $repo = "frungillo/MicriCancelli"
+
+# Se lo script sta nella cartella del programma (è arrivato con lo zip), aggiorna QUELLA cartella,
+# ovunque sia stata scelta; C:\MicriCancelli resta il default solo quando lo script gira da solo.
+if (-not $PSBoundParameters.ContainsKey('Cartella') -and $PSScriptRoot -and (Test-Path (Join-Path $PSScriptRoot 'MicriCancelli.exe'))) {
+    $Cartella = $PSScriptRoot
+}
 $fileToken = Join-Path $Cartella 'github-token.txt'
 
 Write-Host ""
