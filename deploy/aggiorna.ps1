@@ -5,16 +5,12 @@
 #  (predefinita: C:\MicriCancelli). Se il programma è in esecuzione lo chiude,
 #  sovrascrive i file, CONSERVA database (DB\) e log (logs\) e lo riavvia.
 #
-#  Il repository è privato: serve un token GitHub di SOLA LETTURA (fine-grained,
-#  permesso "Contents: read" sul solo repository MicriCancelli). Lo script lo
-#  cerca in quest'ordine: parametro -Token, variabile d'ambiente
-#  MICRI_GITHUB_TOKEN, file github-token.txt nella cartella del programma.
-#  Alla prima installazione lo salva in quel file, così gli aggiornamenti
-#  successivi non lo richiedono più.
-#
 #  Prima installazione (PowerShell, anche non amministratore):
-#     $env:MICRI_GITHUB_TOKEN = 'github_pat_...'
-#     irm -Headers @{Authorization="Bearer $env:MICRI_GITHUB_TOKEN"} https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
+#     irm https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
+#
+#  Il repository è pubblico: non serve nessun token. Se dovesse tornare privato,
+#  lo script accetta un token GitHub di sola lettura (-Token, variabile d'ambiente
+#  MICRI_GITHUB_TOKEN o file github-token.txt nella cartella del programma).
 #
 #  Aggiornamenti successivi: doppio clic su aggiorna.cmd nella cartella del
 #  programma, oppure:
@@ -49,7 +45,7 @@ try {
     $release = Invoke-RestMethod -Uri $api -Headers $intestazioni
 }
 catch {
-    if (-not $Token) { throw "GitHub ha rifiutato la richiesta e non c'è nessun token: il repository è privato, serve il token di sola lettura (vedi intestazione dello script)." }
+    if (-not $Token) { throw "GitHub non risponde o rifiuta la richiesta ($($_.Exception.Message)): controllare la connessione a internet; se il repository è tornato privato serve un token di sola lettura (vedi intestazione dello script)." }
     throw "GitHub ha rifiutato la richiesta ($($_.Exception.Message)): token scaduto o senza permesso 'Contents: read' su $repo ?"
 }
 $asset = $release.assets | Where-Object { $_.name -like 'MicriCancelli-v*.zip' } | Select-Object -First 1

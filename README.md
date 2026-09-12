@@ -56,21 +56,16 @@ elease.ps1 -Versione 2.0.1 -Note "Cosa cambia"
 Compila in Release con quel numero di versione (che compare nel titolo della finestra), crea lo zip in
 `pubblicazione\` e pubblica tag e release su GitHub.
 
-**Token di accesso.** Il repository è privato, quindi il PC del varco ha bisogno di un token GitHub di
-sola lettura. Si crea una volta da GitHub → Settings → Developer settings → Fine-grained tokens:
-repository `frungillo/MicriCancelli` soltanto, permesso **Contents: Read-only**, scadenza lunga (es. 1 anno).
-Lo script lo salva in `C:\MicriCancelli\github-token.txt` e da lì lo riusa per gli aggiornamenti.
-Se il repository dovesse diventare pubblico, il token non serve più e la procedura resta la stessa.
-
 **Installare sul PC del varco la prima volta** (PowerShell, non serve essere amministratore):
 
 ```powershell
-$env:MICRI_GITHUB_TOKEN = 'github_pat_...'
-irm -Headers @{Authorization="Bearer $env:MICRI_GITHUB_TOKEN"} https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
+irm https://raw.githubusercontent.com/frungillo/MicriCancelli/main/deploy/aggiorna.ps1 | iex
 ```
 
 Installa in `C:\MicriCancelli`, crea il collegamento sul desktop e avvia il programma. Poi, dal
-pannello Parametri: stampante, IP dell'Arduino e chiave della piattaforma.
+pannello Parametri: cambiare subito la password del pannello, poi stampante, IP dell'Arduino e
+chiave della piattaforma. (Il repository è pubblico: non serve alcun token. Lo script accetta comunque
+`-Token` se un giorno tornasse privato.)
 
 **Aggiornare**: doppio clic su `aggiorna.cmd` nella cartella del programma. Lo script confronta la
 versione installata con l'ultima release, scarica lo zip, chiude il programma, sovrascrive i file
