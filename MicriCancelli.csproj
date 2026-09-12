@@ -55,4 +55,13 @@
     </None>
   </ItemGroup>
 
+  <!-- System.Data.SQLite copia le librerie native solo nella cartella di build:
+       nel publish (usato da deployelease.ps1) vanno aggiunte a mano, altrimenti il programma non parte. -->
+  <Target Name="IncludiSQLiteInteropNelPublish" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(OutDir)x64\SQLite.Interop.dll" RelativePath="x64\SQLite.Interop.dll" CopyToPublishDirectory="PreserveNewest" />
+      <ResolvedFileToPublish Include="$(OutDir)x86\SQLite.Interop.dll" RelativePath="x86\SQLite.Interop.dll" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
 </Project>

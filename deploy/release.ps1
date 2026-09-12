@@ -43,6 +43,11 @@ Remove-Item (Join-Path $uscita 'logs')  -Recurse -Force -ErrorAction SilentlyCon
 Copy-Item (Join-Path $PSScriptRoot 'aggiorna.ps1') $uscita -Force
 Set-Content (Join-Path $uscita 'VERSIONE.txt') $Versione -Encoding ASCII
 
+# Controllo: senza le librerie native di SQLite il programma non parte sul PC del cliente
+foreach ($f in @('MicriCancelli.exe', 'System.Data.SQLite.dll', 'x64\SQLite.Interop.dll', 'x86\SQLite.Interop.dll', 'QRCoder.dll', 'DB\cancelli.db')) {
+    if (-not (Test-Path (Join-Path $uscita $f))) { throw "Nel pacchetto manca $f: release interrotta" }
+}
+
 Write-Host "[2/3] Creazione zip..." -ForegroundColor Yellow
 Compress-Archive -Path (Join-Path $uscita '*') -DestinationPath $zip -CompressionLevel Optimal
 $dimensione = [math]::Round((Get-Item $zip).Length / 1MB, 1)
@@ -58,8 +63,16 @@ if ([string]::IsNullOrWhiteSpace($Note)) { $Note = "Release v$Versione di MicriC
 $Note += "`n`nInstallazione/aggiornamento sul PC del varco: vedi README (sezione Distribuzione)."
 Push-Location $radice
 try {
-    gh release create "v$Versione" $zip --title "MicriCancelli v$Versione" --notes $Note
-    if ($LASTEXITCODE -ne 0) { throw "gh release create non riuscito" }
+    gh release view "v$Versione" *> $null
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host "      la release v$Versione esiste: sostituisco lo zip allegato" -ForegroundColor Yellow
+        gh release upload "v$Versione" $zip --clobber
+        if ($LASTEXITCODE -ne 0) { throw "gh release upload non riuscito" }
+    }
+    else {
+        gh release create "v$Versione" $zip --title "MicriCancelli v$Versione" --notes $Note
+        if ($LASTEXITCODE -ne 0) { throw "gh release create non riuscito" }
+    }
 }
 finally { Pop-Location }
 
