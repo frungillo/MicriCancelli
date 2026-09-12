@@ -45,7 +45,7 @@ Set-Content (Join-Path $uscita 'VERSIONE.txt') $Versione -Encoding ASCII
 
 # Controllo: senza le librerie native di SQLite il programma non parte sul PC del cliente
 foreach ($f in @('MicriCancelli.exe', 'System.Data.SQLite.dll', 'x64\SQLite.Interop.dll', 'x86\SQLite.Interop.dll', 'QRCoder.dll', 'DB\cancelli.db')) {
-    if (-not (Test-Path (Join-Path $uscita $f))) { throw "Nel pacchetto manca $f: release interrotta" }
+    if (-not (Test-Path (Join-Path $uscita $f))) { throw "Nel pacchetto manca ${f}: release interrotta" }
 }
 
 Write-Host "[2/3] Creazione zip..." -ForegroundColor Yellow
