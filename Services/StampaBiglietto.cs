@@ -17,7 +17,7 @@ namespace MicriCancelli.Services
     {
         public const float LarghezzaCartaMm = 80f;
         public const float LarghezzaUtileMm = 72f;   // area stampabile tipica delle termiche 80 mm (576 punti a 203 dpi)
-        public const float AltezzaCartaMm = 150f;
+        public const float AltezzaCartaMm = 110f;
 
         private readonly Impostazioni _imp;
 
@@ -82,33 +82,33 @@ namespace MicriCancelli.Services
             // Logo in alto
             using (var logo = Properties.Resources.logo_micri)
             {
-                float larghezzaLogo = 58f;
+                float larghezzaLogo = 36f;
                 float altezzaLogo = larghezzaLogo * logo.Height / logo.Width;
                 g.DrawImage(logo, new RectangleF(centro - larghezzaLogo / 2f, y, larghezzaLogo, altezzaLogo));
-                y += altezzaLogo + 2f;
+                y += altezzaLogo + 1f;
             }
 
             // Intestazione
-            using (var f = new Font("Arial", 15f, FontStyle.Bold))
+            using (var f = new Font("Arial", 11f, FontStyle.Bold))
             {
-                g.DrawString(_imp.IntestazioneBiglietto, f, Brushes.Black, new RectangleF(margine, y, utile, 9f), alCentro);
-                y += 9f;
+                g.DrawString(_imp.IntestazioneBiglietto, f, Brushes.Black, new RectangleF(margine, y, utile, 6f), alCentro);
+                y += 6f;
             }
             using (var penna = new Pen(Color.Black, 0.4f))
                 g.DrawLine(penna, margine + 6f, y, margine + utile - 6f, y);
-            y += 3f;
+            y += 2f;
 
             // Codice QR o barcode
             var contenuto = ContenutoCodice(c);
             if (string.Equals(c.Tipo, "CODE39", StringComparison.OrdinalIgnoreCase))
             {
-                float altezza = 16f;
+                float altezza = 13f;
                 Code39.Disegna(g, contenuto, new RectangleF(margine + 4f, y, utile - 8f, altezza));
                 y += altezza + 2f;
             }
             else
             {
-                float lato = 40f;
+                float lato = 30f;
                 using (var generatore = new QRCodeGenerator())
                 using (var dati = generatore.CreateQrCode(contenuto, QRCodeGenerator.ECCLevel.M))
                 using (var qr = new QRCode(dati))
@@ -120,39 +120,39 @@ namespace MicriCancelli.Services
                     g.DrawImage(immagine, new RectangleF(centro - lato / 2f, y, lato, lato));
                     g.InterpolationMode = interp;
                 }
-                y += lato + 1f;
+                y += lato + 0.5f;
             }
 
             // Numero in chiaro, grande e spaziato
-            using (var f = new Font("Consolas", 26f, FontStyle.Bold))
+            using (var f = new Font("Consolas", 19f, FontStyle.Bold))
             {
                 var spaziato = string.Join(" ", numero.ToCharArray());
-                g.DrawString(spaziato, f, Brushes.Black, new RectangleF(margine, y, utile, 14f), alCentro);
-                y += 14f;
+                g.DrawString(spaziato, f, Brushes.Black, new RectangleF(margine, y, utile, 10f), alCentro);
+                y += 10f;
             }
 
             // Dati di emissione e validità
-            using (var f = new Font("Arial", 9f))
-            using (var fPiccolo = new Font("Arial", 7.5f))
+            using (var f = new Font("Arial", 7.5f))
+            using (var fPiccolo = new Font("Arial", 6.5f))
             {
                 g.DrawString("Emesso il " + c.EmessoIl.ToString("dd/MM/yyyy") + " alle " + c.EmessoIl.ToString("HH:mm"),
-                    f, Brushes.Black, new RectangleF(margine, y, utile, 5.5f), alCentro);
-                y += 5.5f;
+                    f, Brushes.Black, new RectangleF(margine, y, utile, 4.5f), alCentro);
+                y += 4.5f;
                 g.DrawString("Valido per l'ingresso entro le " + c.EmessoIl.AddMinutes(_imp.MinutiValidita).ToString("HH:mm") +
-                             " (" + _imp.MinutiValidita + " minuti)", f, Brushes.Black, new RectangleF(margine, y, utile, 5.5f), alCentro);
-                y += 7f;
+                             " (" + _imp.MinutiValidita + " minuti)", f, Brushes.Black, new RectangleF(margine, y, utile, 4.5f), alCentro);
+                y += 5.5f;
                 g.DrawString("Avvicinare il codice al lettore del varco.\nIl biglietto vale per un solo passaggio.",
-                    fPiccolo, Brushes.Black, new RectangleF(margine, y, utile, 9f), alCentro);
-                y += 10f;
+                    fPiccolo, Brushes.Black, new RectangleF(margine, y, utile, 7f), alCentro);
+                y += 7.5f;
             }
 
             using (var penna = new Pen(Color.Black, 0.3f) { DashStyle = DashStyle.Dash })
                 g.DrawLine(penna, margine, y, margine + utile, y);
-            y += 2.5f;
-            using (var f = new Font("Arial", 7f, FontStyle.Italic))
+            y += 1.5f;
+            using (var f = new Font("Arial", 6f, FontStyle.Italic))
             {
-                g.DrawString("Scuola Calcio MICRI  -  #MICRI", f, Brushes.Black, new RectangleF(margine, y, utile, 4.5f), alCentro);
-                y += 6f;
+                g.DrawString("Scuola Calcio MICRI  -  #MICRI", f, Brushes.Black, new RectangleF(margine, y, utile, 3.5f), alCentro);
+                y += 4f;
             }
             return y;
         }

@@ -37,6 +37,19 @@ namespace MicriCancelli.Services
         /// <summary>Sequenza numerica completa letta dallo scanner. Sollevato sul thread di lavoro, non sulla UI.</summary>
         public event Func<string, Task> CodiceLetto;
 
+        /// <summary>
+        /// Invio premuto "da solo" (non come chiusura di una lettura dello scanner): richiesta di stampare un biglietto.
+        /// Sollevato dentro l'hook, sul thread della UI: il gestore deve solo accodare il lavoro (BeginInvoke).
+        /// </summary>
+        public event Action TastoStampa;
+
+        /// <summary>Se false, l'Invio da solo viene ignorato (es. mentre e' aperto il pannello Parametri).</summary>
+        public volatile bool StampaConInvio = true;
+
+        private const int AntirimbalzoStampaMs = 2000;
+        private long _ultimaStampaMs = -AntirimbalzoStampaMs;
+        private long _ultimaChiusuraMs = -PausaMassimaMs;
+
         public LettoreCodici(Impostazioni imp) { _imp = imp; }
 
         /// <summary>Va chiamato dal thread della UI (serve un message loop per l'hook).</summary>
@@ -74,6 +87,19 @@ namespace MicriCancelli.Services
             if (_ultimoTastoMs >= 0 && adesso - _ultimoTastoMs > PausaMassimaMs) _buffer.Clear();
             _ultimoTastoMs = adesso;
 
+            if (vk == VK_RETURN && _buffer.Length == 0)
+            {
+                // Invio senza nulla in lettura: l'operatore chiede un biglietto (Invio o Enter del tastierino).
+                // Non conta l'Invio che lo scanner manda subito dopo la lettera di chiusura (sequenza appena chiusa),
+                // e un secondo Invio entro due secondi (tasto tenuto premuto, doppia pressione) non stampa due volte.
+                if (!StampaConInvio) return;
+                if (adesso - _ultimaChiusuraMs < PausaMassimaMs) return;
+                if (adesso - _ultimaStampaMs < AntirimbalzoStampaMs) return;
+                _ultimaStampaMs = adesso;
+                TastoStampa?.Invoke();
+                return;
+            }
+
             if (vk == VK_RETURN || vk == (int)_imp.TastoFine)
             {
                 Completa();
@@ -89,6 +115,7 @@ namespace MicriCancelli.Services
 
         private void Completa()
         {
+            _ultimaChiusuraMs = _cronometro.ElapsedMilliseconds;
             var sequenza = _buffer.ToString();
             _buffer.Clear();
             if (sequenza.Length != _imp.LunghezzaCodice) return;

@@ -49,8 +49,7 @@ script `aggiorna.ps1`.
 **Creare una release** (macchina di sviluppo, GitHub CLI autenticata):
 
 ```bash
-powershell -ExecutionPolicy Bypass -File .\deploy
-elease.ps1 -Versione 2.0.1 -Note "Cosa cambia"
+powershell -ExecutionPolicy Bypass -File .\deploy\release.ps1 -Versione 2.0.1 -Note "Cosa cambia"
 ```
 
 Compila in Release con quel numero di versione (che compare nel titolo della finestra), crea lo zip in

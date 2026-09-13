@@ -33,6 +33,7 @@ namespace MicriCancelli
             {
                 _lettore = new LettoreCodici(App.Impostazioni);
                 _lettore.CodiceLetto += SuCodiceLetto;
+                _lettore.TastoStampa += () => EseguiSuUi(StampaNuovoBiglietto);
                 _lettore.Avvia();
             }
             catch (Exception ex)
@@ -108,8 +109,12 @@ namespace MicriCancelli
             }
         }
 
-        private void btnGeneraTicket_Click(object sender, EventArgs e)
+        private void btnGeneraTicket_Click(object sender, EventArgs e) => StampaNuovoBiglietto();
+
+        /// <summary>Genera e stampa un biglietto: dal pulsante o dal tasto Invio (tastiera o tastierino).</summary>
+        private void StampaNuovoBiglietto()
         {
+            if (!btnGeneraTicket.Enabled) return; // stampa gia' in corso
             btnGeneraTicket.Enabled = false;
             try
             {
@@ -132,11 +137,13 @@ namespace MicriCancelli
 
         private void btnSettings_Click(object sender, EventArgs e)
         {
+            if (_lettore != null) _lettore.StampaConInvio = false; // l'Invio nel pannello non deve stampare
             using (var frm = new frmParametri())
             {
                 frm.StartPosition = FormStartPosition.CenterParent;
                 frm.ShowDialog(this);
             }
+            if (_lettore != null) _lettore.StampaConInvio = true;
             App.RicaricaImpostazioni();
             impostaTimer();
             caricaCodici();
@@ -146,11 +153,13 @@ namespace MicriCancelli
 
         private void btnTabella_Click(object sender, EventArgs e)
         {
+            if (_lettore != null) _lettore.StampaConInvio = false;
             using (var frm = new frmTabella())
             {
                 frm.StartPosition = FormStartPosition.CenterParent;
                 frm.ShowDialog(this);
             }
+            if (_lettore != null) _lettore.StampaConInvio = true;
         }
 
         private void btnRefresh_Click(object sender, EventArgs e) => caricaCodici();
